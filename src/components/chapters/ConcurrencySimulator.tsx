@@ -30,19 +30,36 @@ export function ConcurrencySimulator() {
     },
   ]);
   const [appState, setAppState] = useState<"active" | "logging_out" | "locked" | "refreshed">("active");
+  const timeoutIdsRef = React.useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clearAllTimeouts = () => {
+    timeoutIdsRef.current.forEach(clearTimeout);
+    timeoutIdsRef.current = [];
+  };
+
+  React.useEffect(() => {
+    return () => clearAllTimeouts();
+  }, []);
 
   const runSimulation = () => {
     sound.playClick();
+    clearAllTimeouts();
     setIsRunning(true);
     setLogs([]);
     setAppState("active");
+
+    const safeTimeout = (fn: () => void, ms: number) => {
+      const id = setTimeout(fn, ms);
+      timeoutIdsRef.current.push(id);
+      return id;
+    };
 
     const addLog = (
       text: string,
       status: "info" | "success" | "danger" | "warn",
       offsetMs: number
     ) => {
-      setTimeout(() => {
+      safeTimeout(() => {
         const timeStr = `00:0${(offsetMs / 1000).toFixed(2)}`;
         setLogs((prev) => [...prev, { id: Math.random().toString(), time: timeStr, text, status }]);
       }, offsetMs);
@@ -54,25 +71,25 @@ export function ConcurrencySimulator() {
       addLog("Driver fare calculation (Req #2) -> HTTP 401 (Access Token Expired)", "warn", 180);
       addLog("FCM notification pull (Req #3) -> HTTP 401 (Access Token Expired)", "warn", 250);
 
-      setTimeout(() => {
+      safeTimeout(() => {
         addLog("Req #1 fires /auth/refresh with Refresh Token [RT_101]", "info", 500);
       }, 500);
 
-      setTimeout(() => {
+      safeTimeout(() => {
         addLog("Req #2 fires DUPLICATE /auth/refresh with old [RT_101] (RACE CONDITION!)", "danger", 750);
       }, 750);
 
-      setTimeout(() => {
+      safeTimeout(() => {
         addLog("Server rotates token: RT_101 is now invalidated. New RT_102 issued to Req #1.", "info", 1100);
       }, 1100);
 
-      setTimeout(() => {
+      safeTimeout(() => {
         addLog("Server receives Req #2 with old RT_101 -> TOKEN ROTATION REUSE ATTACK DETECTED!", "danger", 1400);
         addLog("FATAL: Auth server forcibly revokes entire session hierarchy.", "danger", 1650);
         setAppState("logging_out");
       }, 1400);
 
-      setTimeout(() => {
+      safeTimeout(() => {
         addLog("DRIVER LOGGED OUT MID-TRIP. User forced to re-enter credentials.", "danger", 2000);
         setIsRunning(false);
       }, 2000);
@@ -82,35 +99,51 @@ export function ConcurrencySimulator() {
       addLog("Driver fare calculation (Req #2) -> HTTP 401 (Access Token Expired)", "warn", 180);
       addLog("FCM notification pull (Req #3) -> HTTP 401 (Access Token Expired)", "warn", 250);
 
-      setTimeout(() => {
+      safeTimeout(() => {
         addLog("[MUTEX_LOCK]: Req #1 acquires exclusive Refresh Mutex Lock.", "success", 450);
         setAppState("locked");
       }, 450);
 
-      setTimeout(() => {
+      safeTimeout(() => {
         addLog("[REQUEST_QUEUE]: Req #2 and Req #3 intercepted -> Enqueued into Pending Retry Buffer.", "info", 700);
       }, 700);
 
-      setTimeout(() => {
+      safeTimeout(() => {
         addLog("Unified Refresh Engine issues single /auth/refresh request to OAuth gateway.", "info", 1000);
       }, 1000);
 
-      setTimeout(() => {
+      safeTimeout(() => {
         addLog("Auth Server returns new Access Token [AT_992] and Refresh Token [RT_102].", "success", 1400);
         setAppState("refreshed");
       }, 1400);
 
-      setTimeout(() => {
+      safeTimeout(() => {
         addLog("[DE-QUEUE]: Req #2 and Req #3 retried automatically with new token [AT_992] -> HTTP 200 OK!", "success", 1750);
       }, 1750);
 
-      setTimeout(() => {
+      safeTimeout(() => {
         addLog("[MUTEX_RELEASE]: Lock released. 100% requests resolved. ZERO active trip drop.", "success", 2100);
         setAppState("active");
         setIsRunning(false);
         sound.playSuccess();
       }, 2100);
     }
+  };
+
+  const handleModeChange = (newMode: "naive" | "engineered") => {
+    sound.playClick();
+    clearAllTimeouts();
+    setIsRunning(false);
+    setAppState("active");
+    setMode(newMode);
+    setLogs([
+      {
+        id: "mode-switched",
+        time: "00:00.000",
+        text: `Mode changed to ${newMode === "engineered" ? "Shiv Kant's Protected Mutex Solution" : "Unprotected (Race Condition)"}. Click Simulate to test.`,
+        status: "info",
+      },
+    ]);
   };
 
   return (
@@ -136,28 +169,22 @@ export function ConcurrencySimulator() {
         {/* Mode Selector */}
         <div className="flex items-center p-1 bg-black/50 border border-white/10 rounded-lg">
           <button
-            onClick={() => {
-              sound.playClick();
-              setMode("naive");
-            }}
+            onClick={() => handleModeChange("naive")}
             disabled={isRunning}
-            className={`px-3 py-1.5 rounded-md text-xs font-mono transition-colors ${
+            className={`px-3 py-1.5 rounded-md text-xs font-mono transition-colors cursor-pointer ${
               mode === "naive"
-                ? "bg-red-500/20 text-red-300 border border-red-500/40"
+                ? "bg-red-500/20 text-red-300 border border-red-500/40 font-bold"
                 : "text-gray-400 hover:text-gray-200"
             }`}
           >
             Unprotected (Buggy)
           </button>
           <button
-            onClick={() => {
-              sound.playClick();
-              setMode("engineered");
-            }}
+            onClick={() => handleModeChange("engineered")}
             disabled={isRunning}
-            className={`px-3 py-1.5 rounded-md text-xs font-mono transition-colors ${
+            className={`px-3 py-1.5 rounded-md text-xs font-mono transition-colors cursor-pointer ${
               mode === "engineered"
-                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold"
                 : "text-gray-400 hover:text-gray-200"
             }`}
           >

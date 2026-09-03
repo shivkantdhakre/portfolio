@@ -171,6 +171,78 @@ export function BuilderSection() {
             );
           })}
         </div>
+
+        {/* Selected Mission Detailed Case Study Inspection Banner */}
+        {(() => {
+          const selected = exp.missions.find((m) => m.id === activeMission) || exp.missions[1];
+          const SelectedIcon = missionIcons[selected.id] || Layers;
+
+          return (
+            <div className="mt-8 p-6 md:p-8 rounded-2xl bg-[#0e131d] border border-amber-500/40 space-y-5 shadow-2xl relative overflow-hidden">
+              <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 pb-4">
+                <div>
+                  <div className="flex items-center gap-2 text-xs font-mono text-amber-400 font-bold uppercase">
+                    <SelectedIcon className="w-4 h-4" />
+                    <span>CASE STUDY // MISSION {selected.missionNumber} — {selected.platform}</span>
+                  </div>
+                  <h4 className="text-xl md:text-2xl font-bold text-white mt-1">
+                    {selected.title}
+                  </h4>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/30">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>PRODUCTION DEPLOYED</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-gray-300">
+                <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2">
+                  <span className="font-mono text-amber-400 font-bold block text-[11px] uppercase">
+                    THE PRODUCTION CHALLENGE:
+                  </span>
+                  <p className="leading-relaxed text-gray-300 font-sans">
+                    {selected.challenge}
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2">
+                  <span className="font-mono text-cyan-400 font-bold block text-[11px] uppercase">
+                    ENGINEERED ARCHITECTURE &amp; RESOLUTION:
+                  </span>
+                  <p className="leading-relaxed text-gray-300 font-sans">
+                    {selected.solution}
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-2 flex flex-wrap items-center justify-between gap-4 border-t border-white/10">
+                <div className="flex flex-wrap gap-2">
+                  {selected.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-[11px] font-mono px-2.5 py-1 rounded bg-white/5 text-gray-200 border border-white/10"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  {selected.metrics.map((metric) => (
+                    <span
+                      key={metric}
+                      className="text-xs font-mono text-emerald-400 flex items-center gap-1.5"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>{metric}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </section>
   );

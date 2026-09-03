@@ -26,9 +26,20 @@ export function ArchitectSection() {
   const [selectedNode, setSelectedNode] = useState<ArchitectureNode>(project.nodes[0]);
   const [isSimulatingAudit, setIsSimulatingAudit] = useState(false);
   const [auditStep, setAuditStep] = useState<number>(0);
+  const timerRefs = React.useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clearTimers = () => {
+    timerRefs.current.forEach(clearTimeout);
+    timerRefs.current = [];
+  };
+
+  React.useEffect(() => {
+    return () => clearTimers();
+  }, []);
 
   const handleSelectProject = (projId: string) => {
     sound.playClick();
+    clearTimers();
     setSelectedProject(projId);
     const newProj = RESUME_DATA.projects.find((p) => p.id === projId) || RESUME_DATA.projects[0];
     setSelectedNode(newProj.nodes[0]);
@@ -38,18 +49,20 @@ export function ArchitectSection() {
 
   const runPipelineSimulation = () => {
     sound.playClick();
+    clearTimers();
     setIsSimulatingAudit(true);
     setAuditStep(1);
 
     const stepsCount = project.pipeline.length;
     for (let i = 1; i <= stepsCount; i++) {
-      setTimeout(() => {
+      const id = setTimeout(() => {
         setAuditStep(i);
         if (i === stepsCount) {
           setIsSimulatingAudit(false);
           sound.playSuccess();
         }
       }, i * 900);
+      timerRefs.current.push(id);
     }
   };
 

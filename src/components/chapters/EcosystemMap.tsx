@@ -162,12 +162,13 @@ export function EcosystemMap() {
               return (
                 <button
                   key={layer.id}
+                  id={`ecosystem-btn-${layer.id}`}
                   onClick={() => {
                     sound.playClick();
                     setActiveLayer(layer.id);
                   }}
                   onMouseEnter={() => sound.playHover()}
-                  className={`w-full text-left p-3.5 rounded-lg border transition-all flex items-center justify-between group ${
+                  className={`w-full text-left p-3.5 rounded-lg border transition-all flex items-center justify-between group cursor-pointer ${
                     isSelected
                       ? `bg-white/10 ${layer.glowClass} shadow-lg shadow-black/40`
                       : "bg-[#0f141e]/60 border-white/5 text-gray-400 hover:border-white/20 hover:text-gray-200"

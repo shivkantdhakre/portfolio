@@ -115,6 +115,53 @@ export function HumanSection() {
         </p>
       </div>
 
+      {/* Visual Collaboration Network (Nodes = People & Teams, Lines = Collaboration) */}
+      <div className="mb-10 p-6 rounded-2xl bg-[#090d14] border border-emerald-500/30 relative overflow-hidden">
+        <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+          <div className="flex items-center gap-2 text-xs font-mono text-emerald-400">
+            <Workflow className="w-4 h-4" />
+            <span>INTERACTIVE_COLLABORATION_CONSTELLATION // PEOPLE_NETWORK</span>
+          </div>
+          <span className="text-[10px] font-mono text-gray-400">CLICK ANY NODE TO INSPECT ROLE</span>
+        </div>
+
+        {/* Responsive Interactive Constellation Map */}
+        <div className="relative py-6 flex flex-wrap items-center justify-around gap-4">
+          {/* Central Hub */}
+          <div className="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-center space-y-1 shadow-lg shadow-emerald-500/10">
+            <div className="w-3 h-3 rounded-full bg-emerald-400 mx-auto animate-ping" />
+            <div className="text-xs font-mono font-bold text-white">SHIV KANT DHAKRE</div>
+            <div className="text-[10px] font-mono text-emerald-300">SECRETARY, NSS CELL MMMUT</div>
+          </div>
+
+          {/* Connected Initiatives Nodes */}
+          {COMMUNITY_NODES.map((node) => {
+            const isSelected = selectedNode.id === node.id;
+            return (
+              <button
+                key={`constellation-${node.id}`}
+                onClick={() => {
+                  sound.playClick();
+                  setSelectedNode(node);
+                }}
+                onMouseEnter={() => sound.playHover()}
+                className={`p-3 rounded-lg border text-center transition-all cursor-pointer ${
+                  isSelected
+                    ? "bg-emerald-950/60 border-emerald-400 shadow-md shadow-emerald-500/20 scale-105"
+                    : "bg-white/[0.03] border-white/10 text-gray-300 hover:border-emerald-500/40"
+                }`}
+              >
+                <div className={`text-[10px] font-mono font-bold ${isSelected ? "text-emerald-300" : "text-gray-400"}`}>
+                  {node.category.toUpperCase()}
+                </div>
+                <div className="text-xs font-bold text-white mt-0.5">{node.name}</div>
+                <div className="text-[10px] text-gray-400 mt-0.5">{node.highlight}</div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Interactive Constellation / Community Graph */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
         {/* Network Nodes Grid */}
