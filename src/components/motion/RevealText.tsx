@@ -7,6 +7,7 @@ import { EASING } from "./motionTokens";
 interface RevealTextProps {
   text: string;
   className?: string;
+  wordClassName?: string;
   as?: "h1" | "h2" | "h3" | "h4" | "span" | "div" | "p";
   delay?: number;
   stagger?: number;
@@ -16,6 +17,7 @@ interface RevealTextProps {
 export function RevealText({
   text,
   className = "",
+  wordClassName = "",
   as: Component = "span",
   delay = 0,
   stagger = 0.05,
@@ -62,7 +64,7 @@ export function RevealText({
       >
         {words.map((word, idx) => (
           <span key={idx} className="inline-block overflow-hidden py-0.5">
-            <motion.span variants={wordVariants} className="inline-block will-change-transform">
+            <motion.span variants={wordVariants} className={`inline-block will-change-transform ${wordClassName}`}>
               {word}
             </motion.span>
           </span>

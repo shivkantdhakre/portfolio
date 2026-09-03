@@ -194,18 +194,25 @@ export function HeroCoreScene({ activeChapter = "chapter-hero" }: HeroCoreSceneP
     rimLight.position.set(-6, -4, -4);
     scene.add(rimLight);
 
-    // Pointer Tracking
+    // Pointer and Scroll Tracking
     let mouseX = 0;
     let mouseY = 0;
     let targetX = 0;
     let targetY = 0;
+    let scrollY = typeof window !== "undefined" ? window.scrollY : 0;
+    let smoothScrollY = scrollY;
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX = (e.clientX / window.innerWidth) * 2 - 1;
       mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
     };
 
+    const handleScroll = () => {
+      scrollY = window.scrollY;
+    };
+
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     // Window Resize Handler
     const handleResize = () => {
@@ -236,7 +243,13 @@ export function HeroCoreScene({ activeChapter = "chapter-hero" }: HeroCoreSceneP
       targetX += (mouseX - targetX) * 0.05;
       targetY += (mouseY - targetY) * 0.05;
 
+      // Smooth lerp scroll progress
+      smoothScrollY += (scrollY - smoothScrollY) * 0.08;
+      const docHeight = (typeof document !== "undefined" ? document.documentElement.scrollHeight - window.innerHeight : 3000) || 3000;
+      const scrollRatio = Math.min(Math.max(smoothScrollY / docHeight, 0), 1);
+
       // Determine chapter-based choreography targets
+      const isMobile = typeof window !== "undefined" ? window.innerWidth < 768 : false;
       const chapter = activeChapterRef.current;
       let targetCamX = 0;
       let targetCamY = 0;
@@ -246,6 +259,8 @@ export function HeroCoreScene({ activeChapter = "chapter-hero" }: HeroCoreSceneP
       let targetCoreScale = 1.0;
       let targetExpansion = 1.0;
       let particleSpeed = 0.02;
+      let targetEmissive = 0.3;
+      let targetLightIntensity = 3.5;
 
       switch (chapter) {
         case "chapter-hero":
@@ -257,71 +272,99 @@ export function HeroCoreScene({ activeChapter = "chapter-hero" }: HeroCoreSceneP
           targetCoreScale = 1.0;
           targetExpansion = 1.0;
           particleSpeed = 0.02;
+          targetEmissive = 0.3;
+          targetLightIntensity = 3.5;
           break;
         case "chapter-builder":
-          // Exploded blueprint view: panels expand outward, illustrating concurrency and systems engineering
-          targetCamX = 0.35;
-          targetCamY = -0.3;
-          targetCamZ = 7.4;
-          targetCoreX = -0.25;
+          // Exploded blueprint view: panels expand outward in 3D, illustrating concurrency and systems engineering
+          targetCamX = 0.25;
+          targetCamY = -0.15;
+          targetCamZ = 7.8;
+          targetCoreX = isMobile ? 0 : -0.25;
           targetCoreY = -0.1;
-          targetCoreScale = 1.08;
+          targetCoreScale = 1.05;
           targetExpansion = 2.4;
           particleSpeed = 0.04;
+          targetEmissive = 0.35;
+          targetLightIntensity = 4.0;
           break;
         case "chapter-architect":
-          // Core shifts to right side, framing project cards on the left
+          // Core shifts to right side, framing project cards and pipeline diagrams on the left
           targetCamX = 0;
-          targetCamY = 0.2;
-          targetCamZ = 7.8;
-          targetCoreX = 2.3;
-          targetCoreY = 0.2;
-          targetCoreScale = 0.95;
-          targetExpansion = 1.7;
+          targetCamY = 0.1;
+          targetCamZ = 8.2;
+          targetCoreX = isMobile ? 0 : 2.5;
+          targetCoreY = 0.15;
+          targetCoreScale = 0.85;
+          targetExpansion = 1.6;
           particleSpeed = 0.03;
+          targetEmissive = 0.3;
+          targetLightIntensity = 3.5;
           break;
         case "chapter-human":
           // Core shifts left, constellation expands to represent community nodes
-          targetCamX = -0.5;
-          targetCamY = -0.2;
-          targetCamZ = 8.0;
-          targetCoreX = -2.2;
+          targetCamX = -0.3;
+          targetCamY = -0.1;
+          targetCamZ = 8.2;
+          targetCoreX = isMobile ? 0 : -2.2;
           targetCoreY = 0;
-          targetCoreScale = 0.95;
-          targetExpansion = 1.8;
+          targetCoreScale = 0.85;
+          targetExpansion = 1.7;
           particleSpeed = 0.05;
+          targetEmissive = 0.3;
+          targetLightIntensity = 3.5;
           break;
         case "chapter-beyond":
           // Deep space warp sensation
           targetCamX = 0;
           targetCamY = 0;
-          targetCamZ = 6.8;
+          targetCamZ = 7.2;
           targetCoreX = 0;
           targetCoreY = 0;
-          targetCoreScale = 1.15;
-          targetExpansion = 1.4;
-          particleSpeed = 0.09;
+          targetCoreScale = 1.05;
+          targetExpansion = 1.3;
+          particleSpeed = 0.08;
+          targetEmissive = 0.38;
+          targetLightIntensity = 4.0;
           break;
         case "chapter-faq":
-        case "chapter-contact":
-          // Convergence into singularity
           targetCamX = 0;
-          targetCamY = 0.4;
+          targetCamY = 0.2;
           targetCamZ = 8.2;
           targetCoreX = 0;
-          targetCoreY = 0.4;
-          targetCoreScale = 1.0;
-          targetExpansion = 0.95;
-          particleSpeed = 0.02;
+          targetCoreY = 0.2;
+          targetCoreScale = 0.9;
+          targetExpansion = 1.2;
+          particleSpeed = 0.025;
+          targetEmissive = 0.35;
+          targetLightIntensity = 3.8;
+          break;
+        case "chapter-contact":
+          // ELEGANT SINGULARITY: Compact, condensed, rich metallic amber facets
+          targetCamX = 0;
+          targetCamY = 0.25;
+          targetCamZ = 8.8; // Pulled back comfortably to avoid overlapping contact console
+          targetCoreX = 0;
+          targetCoreY = 0.45; // Floats elegantly in upper center
+          targetCoreScale = 0.65; // Compact, refined scale
+          targetExpansion = 0.65; // Tightly condensed formation
+          particleSpeed = 0.015;
+          targetEmissive = 0.55; // Rich glowing metallic amber with 3D shadows and speculars preserved
+          targetLightIntensity = 4.8;
           break;
         default:
           break;
       }
 
-      // Smooth lerp camera position
-      currentCamX += (targetCamX - currentCamX) * 0.035;
-      currentCamY += (targetCamY - currentCamY) * 0.035;
-      currentCamZ += (targetCamZ - currentCamZ) * 0.035;
+      // Smooth expansion lerp: in builder chapter, scroll wheel provides interactive boost
+      const scrollBoost = chapter === "chapter-builder" ? Math.min(scrollRatio * 1.2, 0.4) : 0;
+      const finalExpansionTarget = targetExpansion + scrollBoost;
+      currentExpansion += (finalExpansionTarget - currentExpansion) * 0.05;
+
+      // Smooth lerp camera position directly to chapter targets
+      currentCamX += (targetCamX - currentCamX) * 0.04;
+      currentCamY += (targetCamY - currentCamY) * 0.04;
+      currentCamZ += (targetCamZ - currentCamZ) * 0.04;
       camera.position.set(currentCamX, currentCamY, currentCamZ);
 
       // Smooth lerp core group position and scale
@@ -331,19 +374,21 @@ export function HeroCoreScene({ activeChapter = "chapter-hero" }: HeroCoreSceneP
       coreGroup.position.set(currentCoreX, currentCoreY, 0);
       coreGroup.scale.set(currentCoreScale, currentCoreScale, currentCoreScale);
 
-      // Smooth lerp panel expansion
-      currentExpansion += (targetExpansion - currentExpansion) * 0.035;
+      // Lerp emissive and light intensities for dimensional glowing effect
+      solidInnerMat.emissiveIntensity += (targetEmissive - solidInnerMat.emissiveIntensity) * 0.04;
+      amberLight.intensity += (targetLightIntensity - amberLight.intensity) * 0.04;
 
-      // Rotation reacts to cursor and time
+      // Rotation reacts to cursor, time, and scroll
       coreGroup.rotation.y = elapsedTime * 0.15 + targetX * 0.6;
       coreGroup.rotation.x = Math.sin(elapsedTime * 0.2) * 0.08 - targetY * 0.4;
 
-      // Floating Fragmented Monolith Panels with chapter expansion
+      // Floating Fragmented Monolith Panels with full 3D dynamic explosion
       panels.forEach((p, idx) => {
         const baseRadius = 2.1 + (idx % 2) * 0.35;
         const angle = (idx / panelCount) * Math.PI * 2 + elapsedTime * 0.08;
         const r = baseRadius * currentExpansion;
         p.position.x = Math.cos(angle) * r;
+        p.position.y = (((idx % 5) - 2) * 0.6) * Math.min(currentExpansion, 1.8);
         p.position.z = Math.sin(angle) * r;
         p.rotation.y += 0.005 * (idx % 2 === 0 ? 1 : -1);
       });
@@ -373,6 +418,7 @@ export function HeroCoreScene({ activeChapter = "chapter-hero" }: HeroCoreSceneP
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
 
       // Dispose Three.js resources

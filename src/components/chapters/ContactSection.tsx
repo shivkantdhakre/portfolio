@@ -144,19 +144,17 @@ export function ContactSection({ onOpenRecruiter }: ContactSectionProps) {
             <MagneticButton strength={0.25}>
               <a
                 href={`mailto:${contact.email}`}
-                className="px-6 py-3 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-mono font-bold text-xs flex items-center gap-2 transition-all shadow-lg shadow-amber-500/20 inline-block"
+                className="px-6 py-3.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-mono font-bold text-xs flex items-center gap-2 transition-all shadow-lg shadow-amber-500/25 tracking-wider whitespace-nowrap"
               >
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  <span>INITIATE EMAIL DISPATCH</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </div>
+                <Mail className="w-4 h-4 shrink-0" />
+                <span>INITIATE EMAIL DISPATCH</span>
+                <ArrowUpRight className="w-3.5 h-3.5 shrink-0" />
               </a>
             </MagneticButton>
 
             <MagneticButton strength={0.2} onClick={onOpenRecruiter}>
-              <div className="px-6 py-3 rounded-lg bg-white/10 hover:bg-white/15 border border-white/20 text-white font-mono text-xs flex items-center gap-2 transition-all cursor-pointer">
-                <Briefcase className="w-4 h-4 text-cyan-400" />
+              <div className="px-6 py-3.5 rounded-lg bg-white/10 hover:bg-white/15 border border-white/20 text-white font-mono font-bold text-xs flex items-center gap-2 transition-all cursor-pointer tracking-wider whitespace-nowrap">
+                <Briefcase className="w-4 h-4 text-cyan-400 shrink-0" />
                 <span>ENTER RECRUITER MODE</span>
               </div>
             </MagneticButton>

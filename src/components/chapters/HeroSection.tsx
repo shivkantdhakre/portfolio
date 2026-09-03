@@ -71,9 +71,11 @@ export function HeroSection({ onOpenRecruiter }: HeroSectionProps) {
           <h1 className="text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-tighter text-white uppercase font-sans">
             <RevealText text="SHIV KANT" delay={0.2} />
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-cyan-400">
-              <RevealText text="DHAKRE" delay={0.35} />
-            </span>
+            <RevealText
+              text="DHAKRE"
+              delay={0.35}
+              wordClassName="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-cyan-400"
+            />
           </h1>
 
           <FadeIn delay={0.45} distance={18}>
