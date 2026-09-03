@@ -13,6 +13,7 @@ import {
 interface HeaderNavProps {
   onOpenRecruiter: () => void;
   activeChapter: string;
+  onSelectChapter?: (id: string) => void;
 }
 
 const CHAPTERS = [
@@ -25,7 +26,7 @@ const CHAPTERS = [
   { id: "chapter-contact", number: "06", label: "CONTACT" },
 ];
 
-export function HeaderNav({ onOpenRecruiter, activeChapter }: HeaderNavProps) {
+export function HeaderNav({ onOpenRecruiter, activeChapter, onSelectChapter }: HeaderNavProps) {
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -78,6 +79,7 @@ export function HeaderNav({ onOpenRecruiter, activeChapter }: HeaderNavProps) {
   const scrollTo = (id: string) => {
     sound.playClick();
     setMobileMenuOpen(false);
+    onSelectChapter?.(id);
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });

@@ -59,7 +59,7 @@ export default function Home() {
     }
   }, [recruiterOpen]);
 
-  // Intersection Observer to detect active chapter on scroll
+  // Robust Scroll and Focal Detection for Chapter Tracking
   useEffect(() => {
     const chapterIds = [
       "chapter-hero",
@@ -71,26 +71,56 @@ export default function Home() {
       "chapter-contact",
     ];
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveChapter(entry.target.id);
-          }
-        });
-      },
-      {
-        rootMargin: "-20% 0px -50% 0px",
-        threshold: 0.1,
+    let ticking = false;
+
+    const updateActiveChapter = () => {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+      // When reaching near the bottom of the page, activate Contact (Chapter 06)
+      if (totalScroll > 0 && scrollY >= totalScroll - 120) {
+        setActiveChapter("chapter-contact");
+        ticking = false;
+        return;
       }
-    );
 
-    chapterIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
+      // Primary focal scanline: 35% down from top of viewport (directly under header)
+      const focalLine = window.innerHeight * 0.35;
+      let matchedChapter = chapterIds[0];
 
-    return () => observer.disconnect();
+      // Scan backwards from contact to hero; the first section whose top has passed the focal line is active
+      for (let i = chapterIds.length - 1; i >= 0; i--) {
+        const id = chapterIds[i];
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= focalLine) {
+          matchedChapter = id;
+          break;
+        }
+      }
+
+      setActiveChapter(matchedChapter);
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateActiveChapter);
+        ticking = true;
+      }
+    };
+
+    // Run immediately on mount
+    updateActiveChapter();
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
   }, []);
 
   return (
@@ -108,6 +138,7 @@ export default function Home() {
       {/* Top Header Navigation */}
       <HeaderNav
         activeChapter={activeChapter}
+        onSelectChapter={setActiveChapter}
         onOpenRecruiter={() => setRecruiterOpen(true)}
       />
 

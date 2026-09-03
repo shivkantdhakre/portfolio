@@ -231,13 +231,14 @@ export function HeroCoreScene({ activeChapter = "chapter-hero" }: HeroCoreSceneP
     let currentCoreScale = 1.0;
     let currentExpansion = 1.0;
 
-    // Animation Loop
+    // Animation Loop with modern THREE.Timer
     let animationFrameId: number;
-    const clock = new THREE.Clock();
+    const timer = new THREE.Timer();
 
-    const animate = () => {
+    const animate = (timestamp?: number) => {
       animationFrameId = requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
+      timer.update(timestamp);
+      const elapsedTime = timer.getElapsed();
 
       // Lerp mouse interaction
       targetX += (mouseX - targetX) * 0.05;
@@ -276,30 +277,30 @@ export function HeroCoreScene({ activeChapter = "chapter-hero" }: HeroCoreSceneP
           targetLightIntensity = 3.5;
           break;
         case "chapter-builder":
-          // Exploded blueprint view: panels expand outward in 3D, illustrating concurrency and systems engineering
-          targetCamX = 0.25;
+          // DYNAMIC CONCURRENCY DISASSEMBLY: Core explodes outward, decoupling rings, threads & monolithic subsystems
+          targetCamX = 0.2;
           targetCamY = -0.15;
-          targetCamZ = 7.8;
-          targetCoreX = isMobile ? 0 : -0.25;
+          targetCamZ = 7.4;
+          targetCoreX = isMobile ? 0 : -0.2;
           targetCoreY = -0.1;
-          targetCoreScale = 1.05;
-          targetExpansion = 2.4;
-          particleSpeed = 0.04;
-          targetEmissive = 0.35;
-          targetLightIntensity = 4.0;
+          targetCoreScale = 1.08;
+          targetExpansion = 2.85; // Dramatic physical explosion outward
+          particleSpeed = 0.045;
+          targetEmissive = 0.42;
+          targetLightIntensity = 4.2;
           break;
         case "chapter-architect":
-          // Core shifts to right side, framing project cards and pipeline diagrams on the left
+          // ARCHITECTURAL FRAMING: Core slides right, framing pipeline blueprints & distributed labs on the left
           targetCamX = 0;
           targetCamY = 0.1;
           targetCamZ = 8.2;
-          targetCoreX = isMobile ? 0 : 2.5;
+          targetCoreX = isMobile ? 0 : 2.7;
           targetCoreY = 0.15;
           targetCoreScale = 0.85;
-          targetExpansion = 1.6;
+          targetExpansion = 1.5;
           particleSpeed = 0.03;
-          targetEmissive = 0.3;
-          targetLightIntensity = 3.5;
+          targetEmissive = 0.32;
+          targetLightIntensity = 3.6;
           break;
         case "chapter-human":
           // Core shifts left, constellation expands to represent community nodes
@@ -309,7 +310,7 @@ export function HeroCoreScene({ activeChapter = "chapter-hero" }: HeroCoreSceneP
           targetCoreX = isMobile ? 0 : -2.2;
           targetCoreY = 0;
           targetCoreScale = 0.85;
-          targetExpansion = 1.7;
+          targetExpansion = 1.6;
           particleSpeed = 0.05;
           targetEmissive = 0.3;
           targetLightIntensity = 3.5;
@@ -340,73 +341,118 @@ export function HeroCoreScene({ activeChapter = "chapter-hero" }: HeroCoreSceneP
           targetLightIntensity = 3.8;
           break;
         case "chapter-contact":
-          // ELEGANT SINGULARITY: Compact, condensed, rich metallic amber facets
+          // ELEGANT AMBER SINGULARITY: Radiant, condensed core with clean geometric clearances, perfectly centered
           targetCamX = 0;
-          targetCamY = 0.25;
-          targetCamZ = 8.8; // Pulled back comfortably to avoid overlapping contact console
+          targetCamY = 0.05;
+          targetCamZ = 8.5;
           targetCoreX = 0;
-          targetCoreY = 0.45; // Floats elegantly in upper center
-          targetCoreScale = 0.65; // Compact, refined scale
-          targetExpansion = 0.65; // Tightly condensed formation
-          particleSpeed = 0.015;
-          targetEmissive = 0.55; // Rich glowing metallic amber with 3D shadows and speculars preserved
+          targetCoreY = 0.05; // Centered gracefully between the dispatch console and editorial text
+          targetCoreScale = 0.85; // Clean, prominent architectural scale
+          targetExpansion = 0.78; // Gracefully condensed formation with zero geometry clipping
+          particleSpeed = 0.035; // Gentle atmospheric constellation drift
+          targetEmissive = 0.65; // Rich glowing metallic amber core
           targetLightIntensity = 4.8;
           break;
         default:
           break;
       }
 
-      // Smooth expansion lerp: in builder chapter, scroll wheel provides interactive boost
-      const scrollBoost = chapter === "chapter-builder" ? Math.min(scrollRatio * 1.2, 0.4) : 0;
+      // Smooth expansion lerp: in builder chapter, scroll wheel provides dynamic interactive boost
+      const scrollBoost = chapter === "chapter-builder" ? Math.min(scrollRatio * 1.5, 0.55) : 0;
       const finalExpansionTarget = targetExpansion + scrollBoost;
-      currentExpansion += (finalExpansionTarget - currentExpansion) * 0.05;
+      currentExpansion += (finalExpansionTarget - currentExpansion) * 0.055;
 
       // Smooth lerp camera position directly to chapter targets
-      currentCamX += (targetCamX - currentCamX) * 0.04;
-      currentCamY += (targetCamY - currentCamY) * 0.04;
-      currentCamZ += (targetCamZ - currentCamZ) * 0.04;
+      currentCamX += (targetCamX - currentCamX) * 0.045;
+      currentCamY += (targetCamY - currentCamY) * 0.045;
+      currentCamZ += (targetCamZ - currentCamZ) * 0.045;
       camera.position.set(currentCamX, currentCamY, currentCamZ);
 
       // Smooth lerp core group position and scale
-      currentCoreX += (targetCoreX - currentCoreX) * 0.035;
-      currentCoreY += (targetCoreY - currentCoreY) * 0.035;
-      currentCoreScale += (targetCoreScale - currentCoreScale) * 0.035;
+      currentCoreX += (targetCoreX - currentCoreX) * 0.04;
+      currentCoreY += (targetCoreY - currentCoreY) * 0.04;
+      currentCoreScale += (targetCoreScale - currentCoreScale) * 0.04;
       coreGroup.position.set(currentCoreX, currentCoreY, 0);
       coreGroup.scale.set(currentCoreScale, currentCoreScale, currentCoreScale);
 
       // Lerp emissive and light intensities for dimensional glowing effect
-      solidInnerMat.emissiveIntensity += (targetEmissive - solidInnerMat.emissiveIntensity) * 0.04;
-      amberLight.intensity += (targetLightIntensity - amberLight.intensity) * 0.04;
+      solidInnerMat.emissiveIntensity += (targetEmissive - solidInnerMat.emissiveIntensity) * 0.05;
+      amberLight.intensity += (targetLightIntensity - amberLight.intensity) * 0.05;
 
-      // Rotation reacts to cursor, time, and scroll
-      coreGroup.rotation.y = elapsedTime * 0.15 + targetX * 0.6;
+      // Rotation reacts to cursor, time, and scroll with majestic cinematic rate
+      const coreSpinRate = chapter === "chapter-builder" ? 0.18 : 0.15;
+      coreGroup.rotation.y = elapsedTime * coreSpinRate + targetX * 0.6;
       coreGroup.rotation.x = Math.sin(elapsedTime * 0.2) * 0.08 - targetY * 0.4;
 
-      // Floating Fragmented Monolith Panels with full 3D dynamic explosion
+      // Floating Fragmented Monolith Panels with Chapter Choreography
       panels.forEach((p, idx) => {
         const baseRadius = 2.1 + (idx % 2) * 0.35;
-        const angle = (idx / panelCount) * Math.PI * 2 + elapsedTime * 0.08;
+        const spinSpeed = chapter === "chapter-builder" ? 0.06 : 0.08;
+        const angle = (idx / panelCount) * Math.PI * 2 + elapsedTime * spinSpeed;
         const r = baseRadius * currentExpansion;
         p.position.x = Math.cos(angle) * r;
-        p.position.y = (((idx % 5) - 2) * 0.6) * Math.min(currentExpansion, 1.8);
+        p.position.y = (((idx % 5) - 2) * 0.6) * Math.max(currentExpansion, 0.75);
         p.position.z = Math.sin(angle) * r;
-        p.rotation.y += 0.005 * (idx % 2 === 0 ? 1 : -1);
+
+        // Reset local rotations each frame to prevent accumulating erratic tilt angles
+        p.rotation.x = 0;
+        p.rotation.z = 0;
+
+        // Scale panels slightly in contact chapter so geometry never clips or collides
+        const pScale = chapter === "chapter-contact" ? 0.82 : 1.0;
+        p.scale.set(pScale, pScale, pScale);
+
+        // Dynamic panel orientation per chapter narrative
+        if (chapter === "chapter-builder") {
+          // Exploded CAD disassembly orientation: panels face radially outward with blueprint edges
+          p.lookAt(p.position.x * 2, p.position.y, p.position.z * 2);
+          p.rotation.z = Math.sin(elapsedTime * 1.5 + idx) * 0.15;
+        } else {
+          // Standard upright architectural telemetry orbit
+          p.lookAt(0, p.position.y * 0.3, 0);
+          p.rotation.y += 0.005 * (idx % 2 === 0 ? 1 : -1);
+        }
       });
 
-      // Reactor pulsation
-      const pulse = 1 + Math.sin(elapsedTime * 2.5) * 0.07;
-      innerCore.scale.set(pulse, pulse, pulse);
-      innerCore.rotation.y = -elapsedTime * 0.35;
-      innerCore.rotation.z = elapsedTime * 0.2;
+      // Reactor pulsation and layer dynamics
+      const pulseRate = chapter === "chapter-contact" ? 3.2 : 2.5;
+      const pulseAmp = chapter === "chapter-builder" ? 0.14 : 0.07;
+      const pulse = 1 + Math.sin(elapsedTime * pulseRate) * pulseAmp;
 
-      solidInner.rotation.x = elapsedTime * 0.25;
-      solidInner.rotation.y = elapsedTime * 0.3;
+      if (chapter === "chapter-builder") {
+        // Disassembly: inner wireframe shell expands outward to expose inner core
+        const layerSep = 1 + (currentExpansion - 1) * 0.18;
+        innerCore.scale.set(pulse * layerSep, pulse * layerSep, pulse * layerSep);
+        innerCore.rotation.y = -elapsedTime * 0.45;
+        innerCore.rotation.z = elapsedTime * 0.3;
+      } else if (chapter === "chapter-contact") {
+        // Condensed singularity: compact golden reactor diamond
+        innerCore.scale.set(0.9 * pulse, 0.9 * pulse, 0.9 * pulse);
+        innerCore.rotation.y = -elapsedTime * 0.45;
+        innerCore.rotation.z = elapsedTime * 0.3;
+      } else {
+        innerCore.scale.set(pulse, pulse, pulse);
+        innerCore.rotation.y = -elapsedTime * 0.35;
+        innerCore.rotation.z = elapsedTime * 0.2;
+      }
 
-      // Rings dynamic tilt
-      ring1.rotation.z = elapsedTime * 0.12;
-      ring2.rotation.z = -elapsedTime * 0.18;
+      solidInner.rotation.x = elapsedTime * (chapter === "chapter-contact" ? 0.35 : 0.25);
+      solidInner.rotation.y = elapsedTime * (chapter === "chapter-contact" ? 0.45 : 0.3);
 
-      // Particles drift with chapter speed
+      // Telemetry Rings: 3D Dimensional Tilts with zero edge-on flattening
+      const ringScale = chapter === "chapter-contact"
+        ? 0.75
+        : (chapter === "chapter-builder" ? 0.85 + currentExpansion * 0.25 : 1.0);
+
+      ring1.scale.set(ringScale, ringScale, ringScale);
+      ring2.scale.set(ringScale * 1.15, ringScale * 1.15, ringScale * 1.15);
+
+      ring1.rotation.x = (Math.PI / 2.3) + (chapter === "chapter-builder" ? (currentExpansion - 1) * 0.15 : 0);
+      ring2.rotation.x = (-Math.PI / 3) - (chapter === "chapter-builder" ? (currentExpansion - 1) * 0.2 : 0);
+      ring1.rotation.z = elapsedTime * (chapter === "chapter-contact" ? 0.2 : (chapter === "chapter-builder" ? 0.2 : 0.12));
+      ring2.rotation.z = -elapsedTime * (chapter === "chapter-contact" ? 0.25 : (chapter === "chapter-builder" ? 0.28 : 0.18));
+
+      // Constellation particles speed
       particles.rotation.y = elapsedTime * particleSpeed;
 
       renderer.render(scene, camera);
@@ -439,6 +485,7 @@ export function HeroCoreScene({ activeChapter = "chapter-hero" }: HeroCoreSceneP
         p.geometry.dispose();
       });
 
+      timer.dispose?.();
       renderer.dispose();
       if (renderer.domElement && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);

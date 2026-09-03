@@ -129,7 +129,7 @@ export function ArchitectSection() {
       </div>
 
       {/* Main Architecture Interactive Lab */}
-      <div className="bg-[#0b0f17] border border-white/15 rounded-2xl p-6 md:p-8 backdrop-blur-xl space-y-8">
+      <div className="bg-[#0b0f17]/75 border border-white/15 rounded-2xl p-6 md:p-8 backdrop-blur-xl space-y-8 shadow-2xl">
         {/* Project Header Overview */}
         <div className="flex flex-wrap items-start justify-between gap-4 pb-6 border-b border-white/10">
           <div className="space-y-1 max-w-2xl">
@@ -236,7 +236,7 @@ export function ArchitectSection() {
           </div>
 
           {/* Node Deep Dive Inspector (Why it exists / What it solves / Shiv usage) */}
-          <div className="lg:col-span-6 bg-[#111622] border border-white/10 rounded-xl p-6 flex flex-col justify-between relative overflow-hidden">
+          <div className="lg:col-span-6 bg-[#111622]/70 border border-white/10 rounded-xl p-6 flex flex-col justify-between relative overflow-hidden backdrop-blur-md">
             <div className="space-y-5">
               <div className="flex items-start justify-between border-b border-white/10 pb-4">
                 <div>
