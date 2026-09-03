@@ -6,10 +6,8 @@ import {
   Volume2, 
   VolumeX, 
   Briefcase, 
-  Sparkles, 
   Menu, 
-  X,
-  Compass
+  X
 } from "lucide-react";
 
 interface HeaderNavProps {
@@ -48,7 +46,15 @@ export function HeaderNav({ onOpenRecruiter, activeChapter }: HeaderNavProps) {
   // Global 'R' key listener to trigger Recruiter Mode
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      // Don't intercept if typing in an input or if modifier keys are pressed (e.g. Ctrl+R or Cmd+R)
+      if (
+        e.target instanceof HTMLInputElement || 
+        e.target instanceof HTMLTextAreaElement ||
+        (e.target as HTMLElement)?.isContentEditable ||
+        e.ctrlKey || 
+        e.metaKey || 
+        e.altKey
+      ) {
         return;
       }
       if (e.key === "r" || e.key === "R") {

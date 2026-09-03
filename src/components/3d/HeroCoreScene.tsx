@@ -12,15 +12,19 @@ export function HeroCoreScene() {
     if (!container) return;
 
     // Check WebGL availability
+    let glAvailable = true;
     try {
       const canvas = document.createElement("canvas");
       const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
       if (!gl) {
-        setHasWebGL(false);
-        return;
+        glAvailable = false;
       }
     } catch {
-      setHasWebGL(false);
+      glAvailable = false;
+    }
+
+    if (!glAvailable) {
+      setTimeout(() => setHasWebGL(false), 0);
       return;
     }
 
@@ -44,7 +48,7 @@ export function HeroCoreScene() {
         powerPreference: "high-performance",
       });
     } catch {
-      setHasWebGL(false);
+      setTimeout(() => setHasWebGL(false), 0);
       return;
     }
 
@@ -186,7 +190,7 @@ export function HeroCoreScene() {
     let mouseY = 0;
     let targetX = 0;
     let targetY = 0;
-    let scrollY = 0;
+    let scrollY = typeof window !== "undefined" ? window.scrollY : 0;
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX = (e.clientX / window.innerWidth) * 2 - 1;
@@ -210,7 +214,7 @@ export function HeroCoreScene() {
 
     // Animation Loop
     let animationFrameId: number;
-    let clock = new THREE.Clock();
+    const clock = new THREE.Clock();
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);

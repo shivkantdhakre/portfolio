@@ -2,15 +2,12 @@
 
 import React from "react";
 import { sound } from "@/lib/sound";
-import { RESUME_DATA } from "@/data/resumeData";
 import { EcosystemMap } from "./EcosystemMap";
 import { 
   ChevronDown, 
   Terminal, 
-  Sparkles, 
   Code2, 
   Briefcase,
-  Layers,
   ArrowUpRight
 } from "lucide-react";
 

@@ -5,17 +5,13 @@ import { sound } from "@/lib/sound";
 import { RESUME_DATA } from "@/data/resumeData";
 import { ConcurrencySimulator } from "./ConcurrencySimulator";
 import { 
-  Building2, 
   Layers, 
   ShieldAlert, 
   WifiOff, 
   Radio, 
   CalendarCheck, 
   Server, 
-  CheckCircle2, 
-  ArrowRight,
-  Sparkles,
-  ExternalLink
+  CheckCircle2
 } from "lucide-react";
 
 export function BuilderSection() {

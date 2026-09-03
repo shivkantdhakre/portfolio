@@ -133,3 +133,78 @@
 .font-mono-code {
   font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
+
+/* Modal Scroll Containment */
+[data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Print Stylesheet for Executive Recruiter Dossier */
+@media print {
+  @page {
+    margin: 1.2cm;
+    size: auto;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    overflow: visible !important;
+  }
+
+  /* Hide background canvas, grids, web nav, footer, interactive chrome */
+  header,
+  footer,
+  .blueprint-grid,
+  .speed-lines,
+  canvas,
+  .no-print,
+  .print-hide {
+    display: none !important;
+  }
+
+  /* Unconstrain modal container to print as a standard document */
+  .print-modal-container {
+    position: static !important;
+    background: transparent !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    display: block !important;
+    backdrop-filter: none !important;
+  }
+
+  .print-modal-card {
+    position: static !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    display: block !important;
+  }
+
+  .print-modal-body {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    padding: 0 !important;
+    color: #0f172a !important;
+    display: block !important;
+  }
+
+  /* Clean up dark backgrounds and make text legible for paper printing */
+  .print-modal-card * {
+    color: #0f172a !important;
+    background-color: transparent !important;
+    border-color: #cbd5e1 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  .print-break-inside-avoid {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}

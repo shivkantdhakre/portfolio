@@ -155,7 +155,7 @@ export function EcosystemMap() {
           </p>
 
           <div className="space-y-2.5">
-            {ECOSYSTEM_LAYERS.map((layer, idx) => {
+            {ECOSYSTEM_LAYERS.map((layer) => {
               const Icon = layer.icon;
               const isSelected = activeLayer === layer.id;
 

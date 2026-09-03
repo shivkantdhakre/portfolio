@@ -2,17 +2,11 @@
 
 import React, { useState } from "react";
 import { sound } from "@/lib/sound";
-import { RESUME_DATA, ProjectData, ArchitectureNode } from "@/data/resumeData";
+import { RESUME_DATA, ArchitectureNode } from "@/data/resumeData";
 import { 
-  Network, 
   SearchCheck, 
   FileText, 
-  Cpu, 
-  Layers, 
-  Database, 
   Zap, 
-  ArrowRight, 
-  Sparkles,
   Info,
   CheckCircle,
   Play,
@@ -140,7 +134,7 @@ export function ArchitectSection() {
         <div className="flex flex-wrap items-start justify-between gap-4 pb-6 border-b border-white/10">
           <div className="space-y-1 max-w-2xl">
             <span className="text-xs font-mono text-amber-400 tracking-wider">
-              {project.date} // ARCHITECTURE CASE STUDY
+              {project.date} {"//"} ARCHITECTURE CASE STUDY
             </span>
             <h3 className="text-2xl font-bold text-white">{project.title}</h3>
             <p className="text-xs sm:text-sm text-gray-300 leading-relaxed font-sans">

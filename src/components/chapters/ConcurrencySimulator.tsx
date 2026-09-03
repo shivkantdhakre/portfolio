@@ -6,14 +6,9 @@ import {
   Lock, 
   Unlock, 
   RotateCw, 
-  CheckCircle2, 
-  XCircle, 
-  AlertTriangle, 
   Cpu, 
   Play, 
-  Check,
-  RefreshCw,
-  Clock
+  RefreshCw
 } from "lucide-react";
 
 export function ConcurrencySimulator() {

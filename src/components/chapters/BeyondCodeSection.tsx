@@ -4,14 +4,11 @@ import React from "react";
 import { sound } from "@/lib/sound";
 import { RESUME_DATA } from "@/data/resumeData";
 import { 
-  Compass, 
   Sparkles, 
   Trophy, 
   Award, 
   Target, 
   BookOpen, 
-  Layers, 
-  Terminal,
   Binary
 } from "lucide-react";
 

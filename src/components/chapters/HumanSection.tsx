@@ -5,14 +5,9 @@ import { sound } from "@/lib/sound";
 import { RESUME_DATA } from "@/data/resumeData";
 import { 
   Users, 
-  HeartHandshake, 
   Award, 
-  Globe2, 
-  GraduationCap, 
-  Sparkles, 
   ChevronRight,
-  Workflow,
-  Compass
+  Workflow
 } from "lucide-react";
 
 interface CommunityNode {

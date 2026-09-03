@@ -5,7 +5,6 @@ import { sound } from "@/lib/sound";
 import { RESUME_DATA } from "@/data/resumeData";
 import confetti from "canvas-confetti";
 import { 
-  Terminal, 
   Mail, 
   Phone, 
   MapPin, 
@@ -14,7 +13,6 @@ import {
   Check, 
   Sparkles, 
   ArrowUpRight,
-  Send,
   Briefcase
 } from "lucide-react";
 
@@ -48,7 +46,13 @@ export function ContactSection({ onOpenRecruiter }: ContactSectionProps) {
 
   const copyEmail = () => {
     sound.playSuccess();
-    navigator.clipboard.writeText(contact.email);
+    try {
+      if (navigator?.clipboard?.writeText) {
+        navigator.clipboard.writeText(contact.email);
+      }
+    } catch {
+      // Ignore clipboard permission errors
+    }
     setCopiedEmail(true);
     triggerConfetti();
     setTimeout(() => setCopiedEmail(false), 3000);
@@ -56,7 +60,13 @@ export function ContactSection({ onOpenRecruiter }: ContactSectionProps) {
 
   const copyPhone = () => {
     sound.playSuccess();
-    navigator.clipboard.writeText(contact.phone);
+    try {
+      if (navigator?.clipboard?.writeText) {
+        navigator.clipboard.writeText(contact.phone);
+      }
+    } catch {
+      // Ignore clipboard permission errors
+    }
     setCopiedPhone(true);
     setTimeout(() => setCopiedPhone(false), 3000);
   };

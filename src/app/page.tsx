@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Lenis from "lenis";
 import { HeroCoreScene } from "@/components/3d/HeroCoreScene";
 import { HeaderNav } from "@/components/navigation/HeaderNav";
@@ -15,6 +15,7 @@ import { RecruiterModeModal } from "@/components/recruiter/RecruiterModeModal";
 export default function Home() {
   const [recruiterOpen, setRecruiterOpen] = useState(false);
   const [activeChapter, setActiveChapter] = useState<string>("chapter-hero");
+  const lenisRef = useRef<Lenis | null>(null);
 
   // Initialize Lenis smooth scrolling
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function Home() {
       wheelMultiplier: 1,
       touchMultiplier: 1.5,
     });
+    lenisRef.current = lenis;
 
     function raf(time: number) {
       lenis.raf(time);
@@ -42,8 +44,18 @@ export default function Home() {
     return () => {
       cancelAnimationFrame(animId);
       lenis.destroy();
+      lenisRef.current = null;
     };
   }, []);
+
+  // Pause Lenis smooth scrolling when modal is open to restore native wheel scroll inside modal
+  useEffect(() => {
+    if (recruiterOpen) {
+      lenisRef.current?.stop();
+    } else {
+      lenisRef.current?.start();
+    }
+  }, [recruiterOpen]);
 
   // Intersection Observer to detect active chapter on scroll
   useEffect(() => {
