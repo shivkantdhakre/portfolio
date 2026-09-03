@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { sound } from "@/lib/sound";
 import { RESUME_DATA } from "@/data/resumeData";
 import confetti from "canvas-confetti";
+import { FadeIn } from "@/components/motion/FadeIn";
+import { MagneticButton } from "@/components/motion/MagneticButton";
 import { 
   Mail, 
   Phone, 
@@ -111,7 +113,7 @@ export function ContactSection({ onOpenRecruiter }: ContactSectionProps) {
       {/* Main Layout Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Editorial Statement */}
-        <div className="lg:col-span-6 space-y-6">
+        <FadeIn direction="left" distance={24} className="lg:col-span-6 space-y-6">
           <div className="space-y-2">
             <h2 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white uppercase font-sans">
               Ready To Build <br />
@@ -139,33 +141,31 @@ export function ContactSection({ onOpenRecruiter }: ContactSectionProps) {
 
           {/* Actions */}
           <div className="flex flex-wrap gap-4 pt-4">
-            <a
-              href={`mailto:${contact.email}`}
-              onMouseEnter={() => sound.playHover()}
-              onClick={() => sound.playClick()}
-              className="px-6 py-3 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-mono font-bold text-xs flex items-center gap-2 transition-all shadow-lg shadow-amber-500/20"
-            >
-              <Mail className="w-4 h-4" />
-              <span>INITIATE EMAIL DISPATCH</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </a>
+            <MagneticButton strength={0.25}>
+              <a
+                href={`mailto:${contact.email}`}
+                className="px-6 py-3 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-mono font-bold text-xs flex items-center gap-2 transition-all shadow-lg shadow-amber-500/20 inline-block"
+              >
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4" />
+                  <span>INITIATE EMAIL DISPATCH</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </div>
+              </a>
+            </MagneticButton>
 
-            <button
-              onClick={() => {
-                sound.playClick();
-                onOpenRecruiter();
-              }}
-              onMouseEnter={() => sound.playHover()}
-              className="px-6 py-3 rounded-lg bg-white/10 hover:bg-white/15 border border-white/20 text-white font-mono text-xs flex items-center gap-2 transition-all cursor-pointer"
-            >
-              <Briefcase className="w-4 h-4 text-cyan-400" />
-              <span>ENTER RECRUITER MODE</span>
-            </button>
+            <MagneticButton strength={0.2} onClick={onOpenRecruiter}>
+              <div className="px-6 py-3 rounded-lg bg-white/10 hover:bg-white/15 border border-white/20 text-white font-mono text-xs flex items-center gap-2 transition-all cursor-pointer">
+                <Briefcase className="w-4 h-4 text-cyan-400" />
+                <span>ENTER RECRUITER MODE</span>
+              </div>
+            </MagneticButton>
           </div>
-        </div>
+        </FadeIn>
 
         {/* Right Cybernetic Terminal Box */}
-        <div className="lg:col-span-6 bg-[#0a0d14] border border-white/15 rounded-xl p-6 font-mono space-y-6 shadow-2xl relative">
+        <FadeIn direction="right" distance={24} className="lg:col-span-6">
+          <div className="bg-[#0a0d14] border border-white/15 rounded-xl p-6 font-mono space-y-6 shadow-2xl relative">
           <div className="flex items-center justify-between border-b border-white/10 pb-4 text-xs text-gray-400">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
@@ -258,29 +258,32 @@ export function ContactSection({ onOpenRecruiter }: ContactSectionProps) {
 
           {/* External Social Profiles */}
           <div className="pt-2 flex items-center gap-3">
-            <a
-              href={contact.linkedinUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onMouseEnter={() => sound.playHover()}
-              className="flex-1 p-2.5 rounded bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center gap-2 text-xs text-gray-300 hover:text-white transition-colors"
-            >
-              <LinkedinIcon className="w-3.5 h-3.5 text-blue-400" />
-              <span>LINKEDIN</span>
-            </a>
+            <MagneticButton strength={0.1} className="flex-1">
+              <a
+                href={contact.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full p-2.5 rounded bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center gap-2 text-xs text-gray-300 hover:text-white transition-colors"
+              >
+                <LinkedinIcon className="w-3.5 h-3.5 text-blue-400" />
+                <span>LINKEDIN</span>
+              </a>
+            </MagneticButton>
 
-            <a
-              href={contact.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onMouseEnter={() => sound.playHover()}
-              className="flex-1 p-2.5 rounded bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center gap-2 text-xs text-gray-300 hover:text-white transition-colors"
-            >
-              <GithubIcon className="w-3.5 h-3.5 text-gray-200" />
-              <span>GITHUB</span>
-            </a>
+            <MagneticButton strength={0.1} className="flex-1">
+              <a
+                href={contact.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full p-2.5 rounded bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center gap-2 text-xs text-gray-300 hover:text-white transition-colors"
+              >
+                <GithubIcon className="w-3.5 h-3.5 text-gray-200" />
+                <span>GITHUB</span>
+              </a>
+            </MagneticButton>
           </div>
         </div>
+        </FadeIn>
       </div>
     </section>
   );

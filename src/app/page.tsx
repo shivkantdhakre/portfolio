@@ -12,6 +12,7 @@ import { BeyondCodeSection } from "@/components/chapters/BeyondCodeSection";
 import { FaqSection } from "@/components/chapters/FaqSection";
 import { ContactSection } from "@/components/chapters/ContactSection";
 import { RecruiterModeModal } from "@/components/recruiter/RecruiterModeModal";
+import { PageLoadIntro } from "@/components/motion/PageLoadIntro";
 
 export default function Home() {
   const [recruiterOpen, setRecruiterOpen] = useState(false);
@@ -94,12 +95,15 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen bg-[#07080c] text-white selection:bg-amber-500 selection:text-black overflow-x-hidden">
+      {/* Cinematic HUD Calibration Intro Sequence */}
+      <PageLoadIntro />
+
       {/* Blueprint Grid & Speed Lines Ambient Overlay */}
       <div className="fixed inset-0 blueprint-grid opacity-60 pointer-events-none z-0" />
       <div className="fixed inset-0 speed-lines opacity-40 pointer-events-none z-0" />
 
-      {/* Persistent 3D Interactive WebGL Scene */}
-      <HeroCoreScene />
+      {/* Persistent 3D Interactive WebGL Scene with Chapter Choreography */}
+      <HeroCoreScene activeChapter={activeChapter} />
 
       {/* Top Header Navigation */}
       <HeaderNav

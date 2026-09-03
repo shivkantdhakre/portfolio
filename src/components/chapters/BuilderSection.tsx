@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { sound } from "@/lib/sound";
 import { RESUME_DATA } from "@/data/resumeData";
 import { ConcurrencySimulator } from "./ConcurrencySimulator";
+import { FadeIn } from "@/components/motion/FadeIn";
+import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
 import { 
   Layers, 
   ShieldAlert, 
@@ -52,7 +54,7 @@ export function BuilderSection() {
       </div>
 
       {/* Section Title & Intro */}
-      <div className="max-w-4xl space-y-4 mb-12">
+      <FadeIn distance={22} className="max-w-4xl space-y-4 mb-12">
         <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white uppercase">
           Production Systems, <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">
@@ -64,7 +66,7 @@ export function BuilderSection() {
           on active vehicle trips, preventing offline data corruption in warehouse operations, and building multi-tenant 
           ERP systems with dual-format hardware printing.
         </p>
-      </div>
+      </FadeIn>
 
       {/* Embedded Concurrency Interactive Lab */}
       <div className="mb-16">
@@ -83,90 +85,91 @@ export function BuilderSection() {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <StaggerGroup staggerInterval={0.07} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {exp.missions.map((mission) => {
             const Icon = missionIcons[mission.id] || Layers;
             const isSelected = activeMission === mission.id;
 
             return (
-              <div
-                key={mission.id}
-                onClick={() => {
-                  sound.playClick();
-                  setActiveMission(mission.id);
-                }}
-                onMouseEnter={() => sound.playHover()}
-                className={`manga-panel rounded-xl p-6 cursor-pointer flex flex-col justify-between transition-all ${
-                  isSelected
-                    ? "bg-[#131826] border-amber-500/60 shadow-xl shadow-amber-500/10 scale-[1.01]"
-                    : "bg-[#0b0e15] border-white/10 hover:border-white/25"
-                }`}
-              >
-                <div className="space-y-4">
-                  {/* Mission Badge & Platform */}
-                  <div className="flex items-center justify-between text-xs font-mono">
-                    <span className="px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold">
-                      MISSION {mission.missionNumber}
-                    </span>
-                    <span className="text-gray-400 text-[11px] truncate max-w-[180px]">
-                      {mission.platform}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h4 className="text-lg font-bold text-white tracking-tight flex items-start gap-2">
-                    <Icon className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                    <span>{mission.title}</span>
-                  </h4>
-
-                  {/* Challenge & Solution */}
-                  <div className="space-y-2 text-xs text-gray-300">
-                    <div>
-                      <span className="font-mono text-amber-400/90 font-semibold block text-[11px]">
-                        CHALLENGE:
+              <StaggerItem key={mission.id}>
+                <div
+                  onClick={() => {
+                    sound.playClick();
+                    setActiveMission(mission.id);
+                  }}
+                  onMouseEnter={() => sound.playHover()}
+                  className={`manga-panel rounded-xl p-6 cursor-pointer flex flex-col justify-between transition-all h-full ${
+                    isSelected
+                      ? "bg-[#131826] border-amber-500/60 shadow-xl shadow-amber-500/10 scale-[1.01]"
+                      : "bg-[#0b0e15] border-white/10 hover:border-white/25"
+                  }`}
+                >
+                  <div className="space-y-4">
+                    {/* Mission Badge & Platform */}
+                    <div className="flex items-center justify-between text-xs font-mono">
+                      <span className="px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold">
+                        MISSION {mission.missionNumber}
                       </span>
-                      <p className="line-clamp-2 text-gray-400">{mission.challenge}</p>
+                      <span className="text-gray-400 text-[11px] truncate max-w-[180px]">
+                        {mission.platform}
+                      </span>
                     </div>
 
-                    <div>
-                      <span className="font-mono text-cyan-400/90 font-semibold block text-[11px]">
-                        ENGINEERED SOLUTION:
-                      </span>
-                      <p className="line-clamp-3 text-gray-300">{mission.solution}</p>
-                    </div>
-                  </div>
-                </div>
+                    {/* Title */}
+                    <h4 className="text-lg font-bold text-white tracking-tight flex items-start gap-2">
+                      <Icon className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                      <span>{mission.title}</span>
+                    </h4>
 
-                <div className="pt-4 mt-4 border-t border-white/10 space-y-3">
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1.5">
-                    {mission.tags.slice(0, 3).map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-gray-300 border border-white/5"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Metrics */}
-                  <div className="space-y-1">
-                    {mission.metrics.slice(0, 2).map((metric) => (
-                      <div
-                        key={metric}
-                        className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-400"
-                      >
-                        <CheckCircle2 className="w-3 h-3 shrink-0" />
-                        <span className="truncate">{metric}</span>
+                    {/* Challenge & Solution */}
+                    <div className="space-y-2 text-xs text-gray-300">
+                      <div>
+                        <span className="font-mono text-amber-400/90 font-semibold block text-[11px]">
+                          CHALLENGE:
+                        </span>
+                        <p className="line-clamp-2 text-gray-400">{mission.challenge}</p>
                       </div>
-                    ))}
+
+                      <div>
+                        <span className="font-mono text-cyan-400/90 font-semibold block text-[11px]">
+                          ENGINEERED SOLUTION:
+                        </span>
+                        <p className="line-clamp-3 text-gray-300">{mission.solution}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 mt-4 border-t border-white/10 space-y-3">
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {mission.tags.slice(0, 3).map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-gray-300 border border-white/5"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Metrics */}
+                    <div className="space-y-1">
+                      {mission.metrics.slice(0, 2).map((metric) => (
+                        <div
+                          key={metric}
+                          className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-400"
+                        >
+                          <CheckCircle2 className="w-3 h-3 shrink-0" />
+                          <span className="truncate">{metric}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </StaggerItem>
             );
           })}
-        </div>
+        </StaggerGroup>
 
         {/* Selected Mission Detailed Case Study Inspection Banner */}
         {(() => {

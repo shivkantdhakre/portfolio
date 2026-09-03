@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { sound } from "@/lib/sound";
 import { RESUME_DATA, ArchitectureNode } from "@/data/resumeData";
+import { FadeIn } from "@/components/motion/FadeIn";
 import { 
   SearchCheck, 
   FileText, 
@@ -85,19 +86,18 @@ export function ArchitectSection() {
       </div>
 
       {/* Section Title */}
-      <div className="max-w-4xl space-y-4 mb-10">
+      <FadeIn distance={24} className="max-w-4xl space-y-4 mb-10">
         <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white uppercase">
           SYSTEM ARCHITECTURE LAB. <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-amber-300">
-            Why Systems Exist, Not Just How They Look.
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-cyan-400">
+            BLUEPRINTS &amp; PIPELINES.
           </span>
         </h2>
         <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
-          Recruiters and senior architects look beyond code syntax into system topology. 
-          Explore the live architecture pipelines of Shiv Kant&apos;s flagship systems below: 
-          inspect any subsystem node to evaluate its design justification, trade-offs, and implementation details.
+          Interactive distributed systems and machine learning workflows. Select nodes to inspect 
+          data-flow contracts, failure modes, and optimization trade-offs.
         </p>
-      </div>
+      </FadeIn>
 
       {/* Project Selector Tabs */}
       <div className="flex flex-wrap gap-3 mb-8">

@@ -3,9 +3,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
-export function HeroCoreScene() {
+interface HeroCoreSceneProps {
+  activeChapter?: string;
+}
+
+export function HeroCoreScene({ activeChapter = "chapter-hero" }: HeroCoreSceneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasWebGL, setHasWebGL] = useState(true);
+  const activeChapterRef = useRef(activeChapter);
+
+  useEffect(() => {
+    activeChapterRef.current = activeChapter;
+  }, [activeChapter]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -185,24 +194,18 @@ export function HeroCoreScene() {
     rimLight.position.set(-6, -4, -4);
     scene.add(rimLight);
 
-    // Pointer and Scroll Tracking
+    // Pointer Tracking
     let mouseX = 0;
     let mouseY = 0;
     let targetX = 0;
     let targetY = 0;
-    let scrollY = typeof window !== "undefined" ? window.scrollY : 0;
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX = (e.clientX / window.innerWidth) * 2 - 1;
       mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
     };
 
-    const handleScroll = () => {
-      scrollY = window.scrollY;
-    };
-
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    window.addEventListener("scroll", handleScroll, { passive: true });
 
     // Window Resize Handler
     const handleResize = () => {
@@ -211,6 +214,15 @@ export function HeroCoreScene() {
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
     window.addEventListener("resize", handleResize);
+
+    // Camera & Core Choreography State
+    let currentCamX = 0;
+    let currentCamY = 0;
+    let currentCamZ = 8.5;
+    let currentCoreX = 0;
+    let currentCoreY = 0;
+    let currentCoreScale = 1.0;
+    let currentExpansion = 1.0;
 
     // Animation Loop
     let animationFrameId: number;
@@ -224,21 +236,113 @@ export function HeroCoreScene() {
       targetX += (mouseX - targetX) * 0.05;
       targetY += (mouseY - targetY) * 0.05;
 
-      // Calculate scroll progress relative to hero height
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight || 3000;
-      const scrollRatio = Math.min(Math.max(scrollY / docHeight, 0), 1);
+      // Determine chapter-based choreography targets
+      const chapter = activeChapterRef.current;
+      let targetCamX = 0;
+      let targetCamY = 0;
+      let targetCamZ = 8.5;
+      let targetCoreX = 0;
+      let targetCoreY = 0;
+      let targetCoreScale = 1.0;
+      let targetExpansion = 1.0;
+      let particleSpeed = 0.02;
 
-      // State-based core transformations
-      // STATE 1 & 2: Idle + Cursor reaction
+      switch (chapter) {
+        case "chapter-hero":
+          targetCamX = 0;
+          targetCamY = 0;
+          targetCamZ = 8.5;
+          targetCoreX = 0;
+          targetCoreY = 0;
+          targetCoreScale = 1.0;
+          targetExpansion = 1.0;
+          particleSpeed = 0.02;
+          break;
+        case "chapter-builder":
+          // Exploded blueprint view: panels expand outward, illustrating concurrency and systems engineering
+          targetCamX = 0.35;
+          targetCamY = -0.3;
+          targetCamZ = 7.4;
+          targetCoreX = -0.25;
+          targetCoreY = -0.1;
+          targetCoreScale = 1.08;
+          targetExpansion = 2.4;
+          particleSpeed = 0.04;
+          break;
+        case "chapter-architect":
+          // Core shifts to right side, framing project cards on the left
+          targetCamX = 0;
+          targetCamY = 0.2;
+          targetCamZ = 7.8;
+          targetCoreX = 2.3;
+          targetCoreY = 0.2;
+          targetCoreScale = 0.95;
+          targetExpansion = 1.7;
+          particleSpeed = 0.03;
+          break;
+        case "chapter-human":
+          // Core shifts left, constellation expands to represent community nodes
+          targetCamX = -0.5;
+          targetCamY = -0.2;
+          targetCamZ = 8.0;
+          targetCoreX = -2.2;
+          targetCoreY = 0;
+          targetCoreScale = 0.95;
+          targetExpansion = 1.8;
+          particleSpeed = 0.05;
+          break;
+        case "chapter-beyond":
+          // Deep space warp sensation
+          targetCamX = 0;
+          targetCamY = 0;
+          targetCamZ = 6.8;
+          targetCoreX = 0;
+          targetCoreY = 0;
+          targetCoreScale = 1.15;
+          targetExpansion = 1.4;
+          particleSpeed = 0.09;
+          break;
+        case "chapter-faq":
+        case "chapter-contact":
+          // Convergence into singularity
+          targetCamX = 0;
+          targetCamY = 0.4;
+          targetCamZ = 8.2;
+          targetCoreX = 0;
+          targetCoreY = 0.4;
+          targetCoreScale = 1.0;
+          targetExpansion = 0.95;
+          particleSpeed = 0.02;
+          break;
+        default:
+          break;
+      }
+
+      // Smooth lerp camera position
+      currentCamX += (targetCamX - currentCamX) * 0.035;
+      currentCamY += (targetCamY - currentCamY) * 0.035;
+      currentCamZ += (targetCamZ - currentCamZ) * 0.035;
+      camera.position.set(currentCamX, currentCamY, currentCamZ);
+
+      // Smooth lerp core group position and scale
+      currentCoreX += (targetCoreX - currentCoreX) * 0.035;
+      currentCoreY += (targetCoreY - currentCoreY) * 0.035;
+      currentCoreScale += (targetCoreScale - currentCoreScale) * 0.035;
+      coreGroup.position.set(currentCoreX, currentCoreY, 0);
+      coreGroup.scale.set(currentCoreScale, currentCoreScale, currentCoreScale);
+
+      // Smooth lerp panel expansion
+      currentExpansion += (targetExpansion - currentExpansion) * 0.035;
+
+      // Rotation reacts to cursor and time
       coreGroup.rotation.y = elapsedTime * 0.15 + targetX * 0.6;
       coreGroup.rotation.x = Math.sin(elapsedTime * 0.2) * 0.08 - targetY * 0.4;
 
-      // STATE 3 & 4: Scroll begins -> Camera moves & object fragments
-      const fragmentExpansion = 1 + scrollRatio * 2.2;
+      // Floating Fragmented Monolith Panels with chapter expansion
       panels.forEach((p, idx) => {
         const baseRadius = 2.1 + (idx % 2) * 0.35;
         const angle = (idx / panelCount) * Math.PI * 2 + elapsedTime * 0.08;
-        const r = baseRadius * fragmentExpansion;
+        const r = baseRadius * currentExpansion;
         p.position.x = Math.cos(angle) * r;
         p.position.z = Math.sin(angle) * r;
         p.rotation.y += 0.005 * (idx % 2 === 0 ? 1 : -1);
@@ -257,12 +361,8 @@ export function HeroCoreScene() {
       ring1.rotation.z = elapsedTime * 0.12;
       ring2.rotation.z = -elapsedTime * 0.18;
 
-      // Particles subtle drift
-      particles.rotation.y = elapsedTime * 0.02;
-
-      // Camera responds to scroll depth
-      camera.position.z = 8.5 - scrollRatio * 3.5;
-      camera.position.y = -scrollRatio * 1.8;
+      // Particles drift with chapter speed
+      particles.rotation.y = elapsedTime * particleSpeed;
 
       renderer.render(scene, camera);
     };
@@ -273,7 +373,6 @@ export function HeroCoreScene() {
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
 
       // Dispose Three.js resources

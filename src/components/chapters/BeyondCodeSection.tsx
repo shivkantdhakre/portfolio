@@ -3,6 +3,7 @@
 import React from "react";
 import { sound } from "@/lib/sound";
 import { RESUME_DATA } from "@/data/resumeData";
+import { FadeIn } from "@/components/motion/FadeIn";
 import { 
   Sparkles, 
   Trophy, 
@@ -48,7 +49,7 @@ export function BeyondCodeSection() {
       </div>
 
       {/* Section Title */}
-      <div className="max-w-4xl space-y-4 mb-12">
+      <FadeIn distance={22} className="max-w-4xl space-y-4 mb-12">
         <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white uppercase font-sans">
           When I&apos;m Not Building Systems... <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-amber-300">
@@ -60,7 +61,7 @@ export function BeyondCodeSection() {
           Immersion in manga, manhwa, and narrative architecture shapes how I approach complex software systems: 
           each component is a character, every edge case a plot twist, and high availability the triumphant resolution.
         </p>
-      </div>
+      </FadeIn>
 
       {/* Manga Editorial Sequence Panels */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
