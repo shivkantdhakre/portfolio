@@ -1,0 +1,51 @@
+# Shiv Kant Dhakre — Full Stack Engineer & AI Systems Builder
+
+> Authoritative developer portfolio and engineering dossier of Shiv Kant Dhakre. Specializing in high-concurrency systems, distributed backend architecture, multi-tenant applications, and machine learning pipelines.
+
+## Identity & Core Details
+- **Full Name**: Shiv Kant Dhakre
+- **Professional Title**: Full-Stack Engineer & AI Systems Builder
+- **Email**: dhakreshivkant@gmail.com
+- **Phone**: +91 63961-07509
+- **Location**: Agra, Uttar Pradesh, India
+- **GitHub**: https://github.com/shivkantdhakre
+- **LinkedIn**: https://www.linkedin.com/in/shivkantdhakre
+- **Portfolio Website**: https://shivkantdhakre.vercel.app
+- **Resume URL**: https://shivkantdhakre.vercel.app/resume.pdf
+
+## Academic Background
+- **Institution**: Madan Mohan Malaviya University of Technology (MMMUT), Gorakhpur
+- **Degree**: Bachelor of Technology (B.Tech) in Computer Science and Engineering
+- **Timeline**: September 2023 – Present
+- **Cumulative GPA**: 7.62 / 10.0
+- **Competitive Examination**: JEE Mains 2023 — All India Rank 61,134
+
+## Production Experience
+### Groww You — Full Stack Developer Intern (June 2026 – August 2026)
+- **Multi-Tenant ERP Platform**: Architected unified schemas for inventory, branch separation, and double-entry bookkeeping across Web (Next.js) and Mobile (React Native / Expo). Implemented automated GST/E-Way billing and dual-format (A4 and POS thermal) receipt generation.
+- **Token-Refresh Concurrency Engine**: Root-caused repeated session logout defects in a live ride-hailing app under heavy concurrency. Engineered a unified refresh engine with mutex request locking, pending queue buffering, and zero dropped trips.
+- **Offline Sync & CI/CD**: Built an OTA-safe pure-JavaScript UUID generator and dual-trigger retry synchronization logic for offline warehouse workers. Established the repository's first CI/CD quality gates using Husky and GitHub Actions.
+- **Broadcast & Real-Time Alerts**: Shipped an administrative dashboard notification engine supporting geo-targeted announcements for active riders and drivers.
+- **Home-Services Booking Engine**: Built complete instant and scheduled appointment booking flows with ratings, FCM push notifications, and wallet ledger payouts.
+
+## Featured Architectures & Projects
+### 1. SEO Health Scanner
+- **Overview**: Full-stack asynchronous web performance audit engine evaluating Core Web Vitals via Google Lighthouse API, backed by BullMQ workers, Redis caching, and Gemini AI actionable remediation reporting.
+- **Tech Stack**: Next.js (App Router), NestJS (TypeScript), Prisma ORM, PostgreSQL, BullMQ, Redis, Google Lighthouse API, Google Gemini AI.
+- **Key Metric**: Sub-second cached audit responses (down from ~25s) with zero event-loop starvation.
+
+### 2. AI-Powered Legal Risk Analyzer
+- **Overview**: NLP document analyzer featuring a custom semantic chunking algorithm bypassing the 512-token transformer limit to perform zero-shot risk classification, named entity recognition (NER), and contractual liability scoring across 50+ page legal documents.
+- **Tech Stack**: Python, Hugging Face Transformers (BART-Large-MNLI, BERT-NER), Zero-Shot Classification, PyPDF.
+- **Key Metric**: 100% clause coverage bypassing 512-token truncation on 50+ page contracts without model retraining.
+
+## Technical Skills Matrix
+- **Languages**: TypeScript, JavaScript (ES6+), Python, C++, HTML5, CSS3.
+- **Frameworks & Libraries**: Next.js, React.js, React Native (Expo), NestJS, Node.js, FastAPI, Tailwind CSS.
+- **Databases & Queues**: PostgreSQL, Prisma ORM, Redis, BullMQ, MongoDB.
+- **AI / ML & Security**: Hugging Face (BART/BERT), Zero-Shot Classification, RAG, OAuth 2.0, JWT Rotation, Mutex Request Locking.
+- **DevOps & Tooling**: GitHub Actions, Husky, Docker, Git, Linux.
+
+## Leadership & Community
+- **Secretary**, National Service Scheme (NSS) Cell, MMMUT (July 2025 – Present): Directed large-scale university initiatives (PARARTH'26, GOONJ'26), spearheaded digital literacy workshops, and established digital documentation systems for volunteer operations.
+- **Technical Co-ordinator**, IIMS-2025 International Conference, MMMUT (January 2025 – April 2025): Architected and maintained the official international conference submission portal with 100% uptime; awarded Certificate of Appreciation by Dept. of Civil Engineering.

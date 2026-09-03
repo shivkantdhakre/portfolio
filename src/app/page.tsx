@@ -9,6 +9,7 @@ import { BuilderSection } from "@/components/chapters/BuilderSection";
 import { ArchitectSection } from "@/components/chapters/ArchitectSection";
 import { HumanSection } from "@/components/chapters/HumanSection";
 import { BeyondCodeSection } from "@/components/chapters/BeyondCodeSection";
+import { FaqSection } from "@/components/chapters/FaqSection";
 import { ContactSection } from "@/components/chapters/ContactSection";
 import { RecruiterModeModal } from "@/components/recruiter/RecruiterModeModal";
 
@@ -65,6 +66,7 @@ export default function Home() {
       "chapter-architect",
       "chapter-human",
       "chapter-beyond",
+      "chapter-faq",
       "chapter-contact",
     ];
 
@@ -121,6 +123,9 @@ export default function Home() {
 
         {/* Chapter 05: BEYOND CODE */}
         <BeyondCodeSection />
+
+        {/* Answer Engine Optimization & Knowledge Base */}
+        <FaqSection />
 
         {/* Chapter 06: LET'S BUILD */}
         <ContactSection onOpenRecruiter={() => setRecruiterOpen(true)} />

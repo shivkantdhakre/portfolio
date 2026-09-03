@@ -21,6 +21,7 @@ const CHAPTERS = [
   { id: "chapter-architect", number: "03", label: "ARCHITECT" },
   { id: "chapter-human", number: "04", label: "HUMAN" },
   { id: "chapter-beyond", number: "05", label: "BEYOND" },
+  { id: "chapter-faq", number: "FAQ", label: "FAQ" },
   { id: "chapter-contact", number: "06", label: "CONTACT" },
 ];
 
@@ -125,6 +126,7 @@ export function HeaderNav({ onOpenRecruiter, activeChapter }: HeaderNavProps) {
                   key={ch.id}
                   onClick={() => scrollTo(ch.id)}
                   onMouseEnter={() => sound.playHover()}
+                  aria-label={`Jump to chapter ${ch.number}: ${ch.label}`}
                   className={`px-3 py-1 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
                     isActive
                       ? "bg-amber-500 text-black font-bold shadow-md shadow-amber-500/20"
@@ -178,6 +180,8 @@ export function HeaderNav({ onOpenRecruiter, activeChapter }: HeaderNavProps) {
             {/* Mobile Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle navigation menu"
+              aria-expanded={mobileMenuOpen}
               className="lg:hidden p-2 rounded-lg bg-white/5 border border-white/10 text-gray-300"
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -192,6 +196,7 @@ export function HeaderNav({ onOpenRecruiter, activeChapter }: HeaderNavProps) {
               <button
                 key={ch.id}
                 onClick={() => scrollTo(ch.id)}
+                aria-label={`Jump to chapter ${ch.number}: ${ch.label}`}
                 className="w-full text-left p-2.5 rounded-lg hover:bg-white/5 text-gray-300 flex items-center gap-3"
               >
                 <span className="text-amber-400 font-bold">{ch.number}</span>
