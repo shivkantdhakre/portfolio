@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { sound } from "@/lib/sound";
+import { ChapterTransition, ChapterHeading } from "@/components/motion/ChapterTransition";
+import { FadeIn } from "@/components/motion/FadeIn";
 import { 
-  HelpCircle, 
   ChevronDown, 
   Sparkles, 
   Terminal, 
@@ -69,21 +70,21 @@ const FAQ_ITEMS: FaqItem[] = [
       <div className="space-y-2 text-gray-300 text-sm leading-relaxed">
         <p>His core production technologies include:</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono pt-1">
-          <div className="p-2 rounded bg-white/5 border border-white/5">
-            <span className="text-amber-400 font-bold block">LANGUAGES:</span>
-            <span>TypeScript, JavaScript (ES6+), Python, C++, HTML5, CSS3</span>
+          <div className="p-2.5 rounded bg-white/5 border border-white/5">
+            <span className="text-amber-400 font-bold block mb-0.5">LANGUAGES:</span>
+            <span className="text-gray-300">TypeScript, JavaScript (ES6+), Python, C++, HTML5, CSS3</span>
           </div>
-          <div className="p-2 rounded bg-white/5 border border-white/5">
-            <span className="text-cyan-400 font-bold block">FULL-STACK &amp; MOBILE:</span>
-            <span>Next.js (App Router), React.js, React Native (Expo), NestJS, Node.js, FastAPI</span>
+          <div className="p-2.5 rounded bg-white/5 border border-white/5">
+            <span className="text-cyan-400 font-bold block mb-0.5">FULL-STACK &amp; MOBILE:</span>
+            <span className="text-gray-300">Next.js (App Router), React.js, React Native (Expo), NestJS, Node.js, FastAPI</span>
           </div>
-          <div className="p-2 rounded bg-white/5 border border-white/5">
-            <span className="text-emerald-400 font-bold block">STORAGE &amp; QUEUES:</span>
-            <span>PostgreSQL, Redis (In-Memory Cache &amp; Mutex), BullMQ, Prisma ORM, MongoDB</span>
+          <div className="p-2.5 rounded bg-white/5 border border-white/5">
+            <span className="text-emerald-400 font-bold block mb-0.5">STORAGE &amp; QUEUES:</span>
+            <span className="text-gray-300">PostgreSQL, Redis (In-Memory Cache &amp; Mutex), BullMQ, Prisma ORM, MongoDB</span>
           </div>
-          <div className="p-2 rounded bg-white/5 border border-white/5">
-            <span className="text-purple-400 font-bold block">AI &amp; MACHINE LEARNING:</span>
-            <span>Hugging Face (BART/BERT), Zero-Shot Classification, RAG, Gemini AI, PyPDF</span>
+          <div className="p-2.5 rounded bg-white/5 border border-white/5">
+            <span className="text-purple-400 font-bold block mb-0.5">AI &amp; MACHINE LEARNING:</span>
+            <span className="text-gray-300">Hugging Face (BART/BERT), Zero-Shot Classification, RAG, Gemini AI, PyPDF</span>
           </div>
         </div>
       </div>
@@ -174,13 +175,13 @@ const FAQ_ITEMS: FaqItem[] = [
         <div className="flex flex-wrap gap-2 text-xs font-mono pt-1">
           <a
             href="mailto:dhakreshivkant@gmail.com"
-            className="px-3 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 hover:bg-amber-500/30 transition-colors"
+            className="px-3 py-1.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25 transition-colors"
           >
             Email: dhakreshivkant@gmail.com
           </a>
           <a
             href="tel:+916396107509"
-            className="px-3 py-1 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/30 transition-colors"
+            className="px-3 py-1.5 rounded bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/25 transition-colors"
           >
             Phone: +91 63961-07509
           </a>
@@ -188,7 +189,7 @@ const FAQ_ITEMS: FaqItem[] = [
             href="https://www.linkedin.com/in/shivkantdhakre"
             target="_blank"
             rel="noreferrer"
-            className="px-3 py-1 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 hover:bg-blue-500/30 transition-colors"
+            className="px-3 py-1.5 rounded bg-blue-500/15 text-blue-300 border border-blue-500/30 hover:bg-blue-500/25 transition-colors"
           >
             LinkedIn: in/shivkantdhakre
           </a>
@@ -196,7 +197,7 @@ const FAQ_ITEMS: FaqItem[] = [
             href="https://github.com/shivkantdhakre"
             target="_blank"
             rel="noreferrer"
-            className="px-3 py-1 rounded bg-white/10 text-gray-200 border border-white/20 hover:bg-white/15 transition-colors"
+            className="px-3 py-1.5 rounded bg-white/10 text-gray-200 border border-white/20 hover:bg-white/15 transition-colors"
           >
             GitHub: shivkantdhakre
           </a>
@@ -219,49 +220,32 @@ export function FaqSection() {
     <section
       id="chapter-faq"
       aria-labelledby="faq-heading"
-      className="relative w-full py-20 px-4 sm:px-8 max-w-7xl mx-auto z-10"
+      className="relative w-full py-24 px-4 sm:px-8 max-w-7xl mx-auto z-10"
     >
-      {/* Editorial Chapter Header */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-10">
-        <div className="flex items-center gap-3">
-          <span className="text-3xl sm:text-4xl font-mono font-extrabold text-amber-500 tracking-tighter">
-            FAQ
-          </span>
-          <div className="h-7 w-[1px] bg-white/20" />
-          <div className="space-y-0.5">
-            <span
-              id="faq-heading"
-              className="text-xs font-mono font-bold tracking-widest text-white uppercase block"
-            >
-              KNOWLEDGE BASE &amp; AEO
-            </span>
-            <span className="text-[10px] font-mono text-gray-400 tracking-wider">
-              ANSWER ENGINE &amp; SEARCH GROUNDING // VERIFIED FACTS
-            </span>
-          </div>
-        </div>
-
-        <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/20">
-          <HelpCircle className="w-3.5 h-3.5 text-cyan-400" />
-          <span>STRUCTURED ANSWERS</span>
-        </div>
-      </div>
+      {/* Chapter Marker */}
+      <ChapterTransition
+        number="06"
+        title="KNOWLEDGE BASE & AEO"
+        subtitle="ANSWER ENGINE & SEARCH GROUNDING // VERIFIED FACTS"
+        badge="STRUCTURED ANSWERS"
+        badgeTone="blue"
+      />
 
       {/* Section Introduction */}
       <div className="max-w-4xl space-y-3 mb-10">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white uppercase font-sans">
+        <ChapterHeading chapter="06" telemetry="GROUNDED_FACTS // SEARCH_AEO">
           Frequently Asked <br className="hidden sm:inline" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-cyan-400">
+          <span className="text-blue-400">
             Engineering &amp; Background Questions
           </span>
-        </h2>
+        </ChapterHeading>
         <p className="text-gray-300 text-sm sm:text-base leading-relaxed font-sans">
           Direct, verified answers to common technical queries asked by engineering hiring managers, 
           technical recruiters, and AI answer engines (Perplexity, Google AI Overviews, ChatGPT Search, Claude).
         </p>
       </div>
 
-      {/* Accordion FAQ Grid */}
+      {/* Accordion FAQ List */}
       <div className="space-y-3">
         {FAQ_ITEMS.map((item) => {
           const isOpen = openItem === item.id;
@@ -283,7 +267,7 @@ export function FaqSection() {
                 id={`faq-question-${item.id}`}
                 onClick={() => toggleItem(item.id)}
                 onMouseEnter={() => sound.playHover()}
-                className="w-full p-4 sm:p-5 text-left flex items-start justify-between gap-4 cursor-pointer group"
+                className="w-full p-4 sm:p-5 text-left flex items-start justify-between gap-4 cursor-pointer group focus-ring-amber"
               >
                 <div className="space-y-1.5 flex-1">
                   <div className="flex items-center gap-2">
@@ -298,7 +282,7 @@ export function FaqSection() {
                 </div>
 
                 <div
-                  className={`p-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-400 group-hover:text-white transition-transform ${
+                  className={`p-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-400 group-hover:text-white transition-transform duration-200 ${
                     isOpen ? "rotate-180 text-amber-400" : ""
                   }`}
                 >
@@ -306,28 +290,32 @@ export function FaqSection() {
                 </div>
               </button>
 
-              {isOpen && (
-                <div
-                  id={`faq-answer-${item.id}`}
-                  role="region"
-                  aria-labelledby={`faq-question-${item.id}`}
-                  className="px-4 sm:px-5 pb-5 pt-1 border-t border-white/5 space-y-3 animate-fadeIn"
-                >
-                  {item.answer}
+              <div
+                id={`faq-answer-${item.id}`}
+                role="region"
+                aria-labelledby={`faq-question-${item.id}`}
+                className={`grid transition-[grid-template-rows] duration-200 ease-out ${
+                  isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <div className="px-4 sm:px-5 pb-5 pt-1 border-t border-white/5 space-y-3">
+                    {item.answer}
 
-                  {/* Taxonomy Tags */}
-                  <div className="pt-2 flex flex-wrap gap-1.5 border-t border-white/5">
-                    {item.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.03] text-gray-400 border border-white/5"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
+                    {/* Taxonomy Tags */}
+                    <div className="pt-2 flex flex-wrap gap-1.5 border-t border-white/5">
+                      {item.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/[0.03] text-gray-400 border border-white/5"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              )}
+              </div>
             </article>
           );
         })}
@@ -335,3 +323,4 @@ export function FaqSection() {
     </section>
   );
 }
+

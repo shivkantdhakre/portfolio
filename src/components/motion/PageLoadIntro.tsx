@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { sound } from "@/lib/sound";
 import { EASING } from "./motionTokens";
@@ -16,101 +16,106 @@ export function PageLoadIntro({ onComplete }: PageLoadIntroProps) {
   );
   const [progress, setProgress] = useState(0);
 
+  const handleDismiss = useCallback(() => {
+    setStage("exit");
+    setTimeout(() => {
+      setStage("complete");
+      onComplete?.();
+    }, 450);
+  }, [onComplete]);
+
   useEffect(() => {
     if (shouldReduceMotion) {
-      if (onComplete) onComplete();
+      onComplete?.();
       return;
     }
 
-    // Telemetry progress increment
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return prev + Math.floor(Math.random() * 25) + 15;
-      });
-    }, 60);
-
+    // Swift, crisp shutter reveal on mount (under 300ms, respecting Emil Kowalski principles)
     const timerComplete = setTimeout(() => {
-      setProgress(100);
       setStage("exit");
-      sound.playSuccess();
-    }, 650);
+    }, 120);
 
     const timerExit = setTimeout(() => {
       setStage("complete");
-      if (onComplete) onComplete();
-    }, 1100);
+      onComplete?.();
+    }, 420);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === "Enter" || e.key === " ") {
+        clearTimeout(timerComplete);
+        clearTimeout(timerExit);
+        handleDismiss();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      clearInterval(interval);
       clearTimeout(timerComplete);
       clearTimeout(timerExit);
+      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [shouldReduceMotion, onComplete]);
+  }, [shouldReduceMotion, handleDismiss, onComplete]);
 
   if (stage === "complete" || shouldReduceMotion) return null;
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 pointer-events-none flex flex-col justify-between overflow-hidden">
+      <div 
+        onClick={handleDismiss}
+        title="Click to dismiss"
+        className="fixed inset-0 z-50 pointer-events-auto cursor-pointer flex flex-col justify-between overflow-hidden select-none"
+      >
         {/* Top Shutter Half */}
-          <motion.div
-            initial={{ y: 0 }}
-            animate={stage === "exit" ? { y: "-100%" } : { y: 0 }}
-            transition={{ duration: 0.7, ease: EASING.cinematic }}
-            className="w-full h-1/2 bg-[#050609] border-b border-white/10 relative"
-          />
+        <motion.div
+          initial={{ y: 0 }}
+          animate={stage === "exit" ? { y: "-100%" } : { y: 0 }}
+          transition={{ duration: 0.35, ease: EASING.powerOut }}
+          className="w-full h-1/2 bg-[#050609] border-b border-white/10 relative flex items-end justify-center pb-4"
+        >
+          <div className="text-[10px] font-mono tracking-widest text-gray-500 uppercase opacity-60">
+            SHIV KANT DHAKRE // ENGINEERING PORTFOLIO
+          </div>
+        </motion.div>
 
-          {/* Center Telemetry Calibration Panel */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={
-              stage === "exit"
-                ? { opacity: 0, scale: 1.05, transition: { duration: 0.3 } }
-                : { opacity: 1, scale: 1, transition: { duration: 0.4 } }
-            }
-            className="absolute inset-0 flex flex-col items-center justify-center p-4 z-10"
-          >
-            {/* Hologram Monogram */}
-            <div className="relative mb-6">
-              <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/40 flex items-center justify-center font-mono font-black text-amber-400 text-2xl shadow-xl shadow-amber-500/10">
-                SK
-              </div>
-              <div className="absolute -inset-2 border border-dashed border-cyan-500/30 rounded-2xl animate-spin" style={{ animationDuration: "14s" }} />
-            </div>
+        {/* Center Kinetic Line */}
+        <motion.div
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={
+            stage === "exit" 
+              ? { opacity: 0, scaleY: 0, transition: { duration: 0.15 } }
+              : { scaleX: 1, opacity: 1, transition: { duration: 0.25, ease: EASING.powerOut } }
+          }
+          className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[1px] bg-gradient-to-r from-transparent via-amber-500 to-transparent z-20 pointer-events-none"
+        />
 
-            {/* Diagnostic readout */}
-            <div className="text-center space-y-2 max-w-xs w-full">
-              <div className="flex items-center justify-between text-[11px] font-mono text-gray-400">
-                <span>[SYS.INIT // CORE]</span>
-                <span className="text-amber-400 font-bold">{Math.min(progress, 100)}%</span>
-              </div>
+        {/* Center Monogram */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={
+            stage === "exit"
+              ? { opacity: 0, scale: 1.02, transition: { duration: 0.2 } }
+              : { opacity: 1, scale: 1, transition: { duration: 0.2 } }
+          }
+          className="absolute inset-0 flex flex-col items-center justify-center p-4 z-10 pointer-events-none"
+        >
+          <div className="w-14 h-14 rounded-xl bg-amber-500/10 border border-amber-500/40 flex items-center justify-center font-mono font-black text-amber-400 text-xl shadow-lg shadow-amber-500/10">
+            SK
+          </div>
+        </motion.div>
 
-              {/* Progress track */}
-              <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full bg-gradient-to-r from-amber-500 via-amber-300 to-cyan-400"
-                  style={{ width: `${Math.min(progress, 100)}%` }}
-                />
-              </div>
-
-              <div className="text-[10px] font-mono text-gray-500 tracking-wider">
-                CALIBRATING 3D ARCHITECTURAL CONSTELLATION
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Bottom Shutter Half */}
-          <motion.div
-            initial={{ y: 0 }}
-            animate={stage === "exit" ? { y: "100%" } : { y: 0 }}
-            transition={{ duration: 0.7, ease: EASING.cinematic }}
-            className="w-full h-1/2 bg-[#050609] border-t border-white/10 relative"
-          />
-        </div>
+        {/* Bottom Shutter Half */}
+        <motion.div
+          initial={{ y: 0 }}
+          animate={stage === "exit" ? { y: "100%" } : { y: 0 }}
+          transition={{ duration: 0.35, ease: EASING.powerOut }}
+          className="w-full h-1/2 bg-[#050609] border-t border-white/10 relative flex items-start justify-center pt-4"
+        >
+          <div className="text-[10px] font-mono tracking-widest text-gray-600 uppercase opacity-50">
+            SYSTEMS OVER SCREENS // 2026
+          </div>
+        </motion.div>
+      </div>
     </AnimatePresence>
   );
 }

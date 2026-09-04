@@ -22,8 +22,8 @@ const CHAPTERS = [
   { id: "chapter-architect", number: "03", label: "ARCHITECT" },
   { id: "chapter-human", number: "04", label: "HUMAN" },
   { id: "chapter-beyond", number: "05", label: "BEYOND" },
-  { id: "chapter-faq", number: "FAQ", label: "FAQ" },
-  { id: "chapter-contact", number: "06", label: "CONTACT" },
+  { id: "chapter-faq", number: "06", label: "FAQ" },
+  { id: "chapter-contact", number: "07", label: "CONTACT" },
 ];
 
 export function HeaderNav({ onOpenRecruiter, activeChapter, onSelectChapter }: HeaderNavProps) {
@@ -100,10 +100,11 @@ export function HeaderNav({ onOpenRecruiter, activeChapter, onSelectChapter }: H
       <header className="fixed top-0 left-0 w-full z-40 bg-[#07080c]/80 backdrop-blur-xl border-b border-white/10 px-4 sm:px-8 py-3.5 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo / Monogram */}
-          <div
+          <button
             onClick={() => scrollTo("chapter-hero")}
             onMouseEnter={() => sound.playHover()}
-            className="flex items-center gap-2.5 cursor-pointer group"
+            className="flex items-center gap-2.5 cursor-pointer group text-left focus-ring-amber rounded-lg p-0.5"
+            aria-label="Scroll to top of portfolio"
           >
             <div className="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center font-mono font-extrabold text-black text-sm group-hover:scale-105 transition-transform">
               SK
@@ -116,12 +117,26 @@ export function HeaderNav({ onOpenRecruiter, activeChapter, onSelectChapter }: H
                 PORTFOLIO // 2026
               </span>
             </div>
-          </div>
+          </button>
 
           {/* Desktop Chapter Navigation */}
           <nav className="hidden lg:flex items-center gap-1 bg-black/40 border border-white/10 rounded-full px-3 py-1 font-mono text-xs">
             {CHAPTERS.map((ch) => {
               const isActive = activeChapter === ch.id;
+              const activeClass = 
+                ch.id === "chapter-hero"
+                  ? "bg-emerald-500 text-black font-bold shadow-md shadow-emerald-500/25"
+                  : ch.id === "chapter-builder"
+                  ? "bg-lime-400 text-black font-bold shadow-md shadow-lime-400/25"
+                  : ch.id === "chapter-architect"
+                  ? "bg-cyan-500 text-black font-bold shadow-md shadow-cyan-500/25"
+                  : ch.id === "chapter-human"
+                  ? "bg-rose-500 text-black font-bold shadow-md shadow-rose-500/25"
+                  : ch.id === "chapter-beyond"
+                  ? "bg-purple-500 text-black font-bold shadow-md shadow-purple-500/25"
+                  : ch.id === "chapter-faq"
+                  ? "bg-blue-500 text-black font-bold shadow-md shadow-blue-500/25"
+                  : "bg-orange-500 text-black font-bold shadow-md shadow-orange-500/25";
 
               return (
                 <button
@@ -129,9 +144,9 @@ export function HeaderNav({ onOpenRecruiter, activeChapter, onSelectChapter }: H
                   onClick={() => scrollTo(ch.id)}
                   onMouseEnter={() => sound.playHover()}
                   aria-label={`Jump to chapter ${ch.number}: ${ch.label}`}
-                  className={`px-3 py-1 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+                  className={`px-3 py-1 rounded-full transition-all flex items-center gap-1.5 cursor-pointer focus-ring-amber ${
                     isActive
-                      ? "bg-amber-500 text-black font-bold shadow-md shadow-amber-500/20"
+                      ? activeClass
                       : "text-gray-400 hover:text-gray-200"
                   }`}
                 >
@@ -154,7 +169,7 @@ export function HeaderNav({ onOpenRecruiter, activeChapter, onSelectChapter }: H
               onClick={toggleSound}
               onMouseEnter={() => sound.playHover()}
               title={soundEnabled ? "Mute Cybernetic Audio" : "Enable Cybernetic Audio"}
-              className={`p-2 rounded-lg border transition-all cursor-pointer ${
+              className={`p-2 rounded-lg border transition-all cursor-pointer focus-ring-amber ${
                 soundEnabled
                   ? "bg-amber-500/20 border-amber-500/50 text-amber-400"
                   : "bg-white/5 border-white/10 text-gray-400 hover:text-white"
@@ -170,7 +185,7 @@ export function HeaderNav({ onOpenRecruiter, activeChapter, onSelectChapter }: H
                 onOpenRecruiter();
               }}
               onMouseEnter={() => sound.playHover()}
-              className="px-3.5 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/40 text-cyan-300 font-mono text-xs font-bold flex items-center gap-2 transition-all shadow-lg shadow-cyan-500/10 cursor-pointer"
+              className="px-3.5 py-1.5 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/35 text-cyan-300 font-mono text-xs font-bold flex items-center gap-2 transition-all shadow-md shadow-cyan-500/10 cursor-pointer focus-ring-cyan"
             >
               <Briefcase className="w-3.5 h-3.5 text-cyan-400" />
               <span className="hidden sm:inline">RECRUITER MODE</span>
@@ -184,7 +199,7 @@ export function HeaderNav({ onOpenRecruiter, activeChapter, onSelectChapter }: H
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle navigation menu"
               aria-expanded={mobileMenuOpen}
-              className="lg:hidden p-2 rounded-lg bg-white/5 border border-white/10 text-gray-300"
+              className="lg:hidden p-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 focus-ring-amber"
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -199,7 +214,7 @@ export function HeaderNav({ onOpenRecruiter, activeChapter, onSelectChapter }: H
                 key={ch.id}
                 onClick={() => scrollTo(ch.id)}
                 aria-label={`Jump to chapter ${ch.number}: ${ch.label}`}
-                className="w-full text-left p-2.5 rounded-lg hover:bg-white/5 text-gray-300 flex items-center gap-3"
+                className="w-full text-left p-2.5 rounded-lg hover:bg-white/5 text-gray-300 flex items-center gap-3 focus-ring-amber"
               >
                 <span className="text-amber-400 font-bold">{ch.number}</span>
                 <span>{ch.label}</span>

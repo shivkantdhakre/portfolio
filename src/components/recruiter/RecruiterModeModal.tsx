@@ -191,12 +191,12 @@ export function RecruiterModeModal({ isOpen, onClose }: RecruiterModeModalProps)
         {/* Top Header Bar */}
         <div className="flex flex-wrap items-center justify-between gap-3 p-4 sm:p-5 border-b border-white/10 bg-[#121722] shrink-0 no-print">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-              <Briefcase className="w-5 h-5" />
+            <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+              <Briefcase className="w-5 h-5 text-cyan-400" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold">
+                <span className="text-xs font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 font-bold">
                   RECRUITER MODE ACTIVATED
                 </span>
                 <span className="text-xs text-gray-400 font-mono hidden md:inline">

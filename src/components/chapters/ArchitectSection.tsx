@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { sound } from "@/lib/sound";
 import { RESUME_DATA, ArchitectureNode } from "@/data/resumeData";
+import { ChapterTransition, ChapterHeading } from "@/components/motion/ChapterTransition";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { 
   SearchCheck, 
@@ -11,7 +12,9 @@ import {
   Info,
   CheckCircle,
   Play,
-  Check
+  ArrowRight,
+  Split,
+  Activity
 } from "lucide-react";
 
 export function ArchitectSection() {
@@ -21,14 +24,14 @@ export function ArchitectSection() {
   const [selectedNode, setSelectedNode] = useState<ArchitectureNode>(project.nodes[0]);
   const [isSimulatingAudit, setIsSimulatingAudit] = useState(false);
   const [auditStep, setAuditStep] = useState<number>(0);
-  const timerRefs = React.useRef<ReturnType<typeof setTimeout>[]>([]);
+  const timerRefs = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const clearTimers = () => {
     timerRefs.current.forEach(clearTimeout);
     timerRefs.current = [];
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     return () => clearTimers();
   }, []);
 
@@ -56,7 +59,7 @@ export function ArchitectSection() {
           setIsSimulatingAudit(false);
           sound.playSuccess();
         }
-      }, i * 900);
+      }, i * 850);
       timerRefs.current.push(id);
     }
   };
@@ -64,50 +67,35 @@ export function ArchitectSection() {
   return (
     <section id="chapter-architect" className="relative w-full py-24 px-4 sm:px-8 max-w-7xl mx-auto z-10">
       {/* Chapter Marker */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-12">
-        <div className="flex items-center gap-3">
-          <span className="text-3xl sm:text-4xl font-mono font-extrabold text-amber-500 tracking-tighter">
-            03
-          </span>
-          <div className="h-7 w-[1px] bg-white/20" />
-          <div className="space-y-0.5">
-            <span className="text-xs font-mono font-bold tracking-widest text-white uppercase block">
-              THE ARCHITECT &amp; LABS
-            </span>
-            <span className="text-[10px] font-mono text-gray-400 tracking-wider">
-              INTERACTIVE SYSTEM ARCHITECTURE &amp; PIPELINES
-            </span>
-          </div>
-        </div>
-
-        <span className="text-xs font-mono text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded border border-cyan-500/20">
-          PROVEN DESIGN PATTERNS
-        </span>
-      </div>
+      <ChapterTransition
+        number="03"
+        title="THE ARCHITECT & LABS"
+        subtitle="DISTRIBUTED SYSTEMS & APPLIED MACHINE LEARNING"
+        badge="PROVEN DESIGN PATTERNS"
+        badgeTone="cyan"
+      />
 
       {/* Section Title */}
-      <FadeIn distance={24} className="max-w-4xl space-y-4 mb-10">
-        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white uppercase">
+      <div className="max-w-4xl space-y-4 mb-10">
+        <ChapterHeading chapter="03" telemetry="SYS_BLUEPRINT // DISTRIBUTED_ML">
           SYSTEM ARCHITECTURE LAB. <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-cyan-400">
-            BLUEPRINTS &amp; PIPELINES.
-          </span>
-        </h2>
-        <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
+          <span className="text-cyan-400">BLUEPRINTS &amp; PIPELINES.</span>
+        </ChapterHeading>
+        <p className="text-gray-300 text-sm sm:text-base leading-relaxed font-sans">
           Interactive distributed systems and machine learning workflows. Select nodes to inspect 
           data-flow contracts, failure modes, and optimization trade-offs.
         </p>
-      </FadeIn>
+      </div>
 
       {/* Project Selector Tabs */}
       <div className="flex flex-wrap gap-3 mb-8">
         <button
           onClick={() => handleSelectProject("seo-health-scanner")}
           onMouseEnter={() => sound.playHover()}
-          className={`px-5 py-3 rounded-lg font-mono text-xs font-bold transition-all flex items-center gap-2.5 cursor-pointer ${
+          className={`px-5 py-3 rounded-lg font-mono text-xs font-bold transition-all flex items-center gap-2.5 cursor-pointer focus-ring-cyan ${
             selectedProject === "seo-health-scanner"
-              ? "bg-amber-500 text-black shadow-lg shadow-amber-500/20"
-              : "bg-white/5 border border-white/10 text-gray-300 hover:border-white/30"
+              ? "bg-cyan-500 text-black shadow-lg shadow-cyan-500/20"
+              : "bg-white/[0.04] border border-white/10 text-gray-300 hover:border-white/25"
           }`}
         >
           <SearchCheck className="w-4 h-4" />
@@ -117,10 +105,10 @@ export function ArchitectSection() {
         <button
           onClick={() => handleSelectProject("legal-risk-analyzer")}
           onMouseEnter={() => sound.playHover()}
-          className={`px-5 py-3 rounded-lg font-mono text-xs font-bold transition-all flex items-center gap-2.5 cursor-pointer ${
+          className={`px-5 py-3 rounded-lg font-mono text-xs font-bold transition-all flex items-center gap-2.5 cursor-pointer focus-ring-amber ${
             selectedProject === "legal-risk-analyzer"
-              ? "bg-cyan-500 text-black shadow-lg shadow-cyan-500/20"
-              : "bg-white/5 border border-white/10 text-gray-300 hover:border-white/30"
+              ? "bg-amber-500 text-black shadow-lg shadow-amber-500/15"
+              : "bg-white/[0.04] border border-white/10 text-gray-300 hover:border-white/25"
           }`}
         >
           <FileText className="w-4 h-4" />
@@ -129,12 +117,12 @@ export function ArchitectSection() {
       </div>
 
       {/* Main Architecture Interactive Lab */}
-      <div className="bg-[#0b0f17]/75 border border-white/15 rounded-2xl p-6 md:p-8 backdrop-blur-xl space-y-8 shadow-2xl">
+      <div className="bg-[#0b0f17]/75 border border-white/15 rounded-2xl p-6 md:p-8 backdrop-blur-xl space-y-8 shadow-2xl panel-anchor">
         {/* Project Header Overview */}
         <div className="flex flex-wrap items-start justify-between gap-4 pb-6 border-b border-white/10">
           <div className="space-y-1 max-w-2xl">
-            <span className="text-xs font-mono text-amber-400 tracking-wider">
-              {project.date} {"//"} ARCHITECTURE CASE STUDY
+            <span className="text-xs font-mono text-cyan-400 tracking-wider">
+              {project.date} {"//"} ARCHITECTURE BLUEPRINT
             </span>
             <h3 className="text-2xl font-bold text-white">{project.title}</h3>
             <p className="text-xs sm:text-sm text-gray-300 leading-relaxed font-sans">
@@ -146,60 +134,110 @@ export function ArchitectSection() {
             onClick={runPipelineSimulation}
             disabled={isSimulatingAudit}
             onMouseEnter={() => sound.playHover()}
-            className="px-4 py-2.5 rounded-lg bg-white/10 hover:bg-white/15 border border-white/20 text-white font-mono text-xs flex items-center gap-2 transition-all cursor-pointer"
+            className="px-5 py-2.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 font-mono text-xs flex items-center gap-2 transition-all cursor-pointer focus-ring-cyan"
           >
-            <Play className={`w-3.5 h-3.5 text-amber-400 ${isSimulatingAudit ? "animate-spin" : ""}`} />
+            <Play className={`w-3.5 h-3.5 text-cyan-400 ${isSimulatingAudit ? "animate-spin" : "fill-cyan-400"}`} />
             <span>{isSimulatingAudit ? "SIMULATING PIPELINE FLOW..." : "ANIMATE SYSTEM PIPELINE"}</span>
           </button>
         </div>
 
-        {/* Visual Pipeline Sequence */}
-        <div className="space-y-3">
-          <span className="text-xs font-mono text-gray-400 uppercase tracking-wider block">
-            End-to-End Data Pipeline:
-          </span>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
-            {project.pipeline.map((item, idx) => {
-              const isCurrentStep = auditStep === idx + 1;
-              const isPassed = auditStep > idx + 1;
-
-              return (
-                <div
-                  key={item.step}
-                  className={`p-3.5 rounded-lg border transition-all ${
-                    isCurrentStep
-                      ? "bg-amber-500/20 border-amber-500 text-white scale-[1.03] shadow-lg shadow-amber-500/20"
-                      : isPassed
-                      ? "bg-emerald-950/20 border-emerald-500/40 text-gray-300"
-                      : "bg-white/[0.02] border-white/10 text-gray-400"
-                  }`}
-                >
-                  <div className="flex items-center justify-between text-xs font-mono mb-1.5">
-                    <span className="font-bold text-amber-400">STAGE {item.step}</span>
-                    {isPassed && <Check className="w-3 h-3 text-emerald-400" />}
-                  </div>
-                  <div className="text-xs font-bold text-white tracking-tight">{item.title}</div>
-                  <p className="text-[11px] text-gray-400 mt-1 line-clamp-3 leading-snug">
-                    {item.detail}
-                  </p>
-                </div>
-              );
-            })}
+        {/* Dynamic Architectural Dataflow Strip */}
+        <div className="p-4 rounded-xl bg-black/50 border border-white/10 text-xs font-mono">
+          <div className="text-[10px] text-gray-400 mb-2 uppercase tracking-wider flex items-center justify-between">
+            <span>LIVE DATA-FLOW TOPOLOGY</span>
+            {isSimulatingAudit && (
+              <span className="text-cyan-400 flex items-center gap-1 font-semibold">
+                <Activity className="w-3 h-3 animate-pulse" />
+                PACKET IN TRANSIT: STAGE {auditStep}
+              </span>
+            )}
           </div>
+
+          {selectedProject === "seo-health-scanner" ? (
+            /* SEO Scanner Pipeline */
+            <div className="flex flex-wrap items-center gap-2">
+              {[
+                { label: "Target URL", sub: "User Input" },
+                { label: "Next.js UI", sub: "Client" },
+                { label: "NestJS API", sub: "Gateway" },
+                { label: "BullMQ", sub: "Queue" },
+                { label: "Redis", sub: "Cache/Lock" },
+                { label: "Lighthouse API", sub: "Compute" },
+                { label: "Gemini AI", sub: "Synthesis" },
+                { label: "Prisma / DB", sub: "Report" },
+              ].map((step, idx, arr) => (
+                <React.Fragment key={step.label}>
+                  <div className={`px-2.5 py-1.5 rounded border transition-all ${
+                    auditStep === idx + 1
+                      ? "bg-cyan-500/20 border-cyan-500 text-cyan-200 font-bold scale-105"
+                      : auditStep > idx + 1
+                      ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
+                      : "bg-white/[0.03] border-white/10 text-gray-400"
+                  }`}>
+                    <span className="block text-[11px] text-white">{step.label}</span>
+                    <span className="block text-[9px] text-gray-400">{step.sub}</span>
+                  </div>
+                  {idx < arr.length - 1 && <ArrowRight className="w-3 h-3 text-gray-600 shrink-0" />}
+                </React.Fragment>
+              ))}
+            </div>
+          ) : (
+            /* Legal AI Pipeline with Sliding-Window Chunking */
+            <div className="flex flex-wrap items-center gap-2">
+              {[
+                { label: "PDF Document", sub: "50+ Pages" },
+                { label: "Text Extraction", sub: "PyPDF/OCR" },
+                { label: "Custom Chunking", sub: "Sliding Window" },
+                { label: "NLP Pipeline", sub: "BART/BERT" },
+                { label: "Zero-Shot Classifier", sub: "Risk Category" },
+                { label: "Entity Recognition", sub: "BERT-NER" },
+                { label: "Risk Matrix", sub: "Liability Score" },
+              ].map((step, idx, arr) => (
+                <React.Fragment key={step.label}>
+                  <div className={`px-2.5 py-1.5 rounded border transition-all ${
+                    auditStep === idx + 1
+                      ? "bg-cyan-500/20 border-cyan-500 text-cyan-200 font-bold scale-105"
+                      : auditStep > idx + 1
+                      ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
+                      : "bg-white/[0.03] border-white/10 text-gray-400"
+                  }`}>
+                    <span className="block text-[11px] text-white">{step.label}</span>
+                    <span className="block text-[9px] text-gray-400">{step.sub}</span>
+                  </div>
+                  {idx < arr.length - 1 && <ArrowRight className="w-3 h-3 text-gray-600 shrink-0" />}
+                </React.Fragment>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Interactive Architecture Lab Nodes & Telemetry Inspector */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4">
-          {/* Architecture Node Map */}
+        {/* Special Technical Callout: Why Semantic Chunking Exists */}
+        {selectedProject === "legal-risk-analyzer" && (
+          <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-mono text-amber-400 font-bold">
+              <Split className="w-4 h-4" />
+              <span>THE 512-TOKEN CONSTRAINT &amp; SEMANTIC SLIDING-WINDOW CHUNKING</span>
+            </div>
+            <p className="text-xs text-gray-300 leading-relaxed font-sans">
+              Transformer models (BERT and BART) have a strict 512-token context window limit. 
+              Naive truncation risks cutting off indemnification, penalty liabilities, or governing law clauses midway through a sentence. 
+              Shiv Kant developed a sliding-window chunking algorithm with semantic overlap that preserves cross-boundary clause context 
+              while remaining strictly within transformer token ceilings.
+            </p>
+          </div>
+        )}
+
+        {/* Interactive Architecture Lab Nodes & Inspector */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-2">
+          {/* Left: Architecture Nodes */}
           <div className="lg:col-span-6 space-y-3">
             <span className="text-xs font-mono text-gray-400 uppercase tracking-wider block">
-              Interactive System Components (Click to Inspect):
+              Architectural Subsystems (Click to Inspect):
             </span>
 
             <div className="space-y-2">
               {project.nodes.map((node) => {
                 const isSelected = selectedNode.id === node.id;
-
                 return (
                   <button
                     key={node.id}
@@ -208,26 +246,23 @@ export function ArchitectSection() {
                       setSelectedNode(node);
                     }}
                     onMouseEnter={() => sound.playHover()}
-                    className={`w-full text-left p-3 rounded-lg border transition-all flex items-center justify-between group cursor-pointer ${
+                    className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-center justify-between cursor-pointer focus-ring-cyan ${
                       isSelected
-                        ? "bg-white/10 border-amber-500 text-white shadow-lg shadow-black/50"
+                        ? "bg-[#141926] border-cyan-500/60 shadow-lg text-white"
                         : "bg-black/30 border-white/5 text-gray-400 hover:border-white/20 hover:text-gray-200"
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          isSelected ? "bg-amber-400 animate-ping" : "bg-gray-600"
-                        }`}
-                      />
+                      <div className={`w-2 h-2 rounded-full ${isSelected ? "bg-cyan-400" : "bg-gray-600"}`} />
                       <div>
-                        <div className="text-xs font-mono font-bold">{node.label}</div>
+                        <div className="text-xs font-mono font-bold text-white tracking-wide">
+                          {node.label}
+                        </div>
                         <div className="text-[11px] text-gray-400">{node.tech}</div>
                       </div>
                     </div>
-
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-gray-400 group-hover:text-amber-400">
-                      INSPECT &rarr;
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-gray-400 border border-white/5">
+                      {node.role}
                     </span>
                   </button>
                 );
@@ -235,59 +270,59 @@ export function ArchitectSection() {
             </div>
           </div>
 
-          {/* Node Deep Dive Inspector (Why it exists / What it solves / Shiv usage) */}
-          <div className="lg:col-span-6 bg-[#111622]/70 border border-white/10 rounded-xl p-6 flex flex-col justify-between relative overflow-hidden backdrop-blur-md">
-            <div className="space-y-5">
-              <div className="flex items-start justify-between border-b border-white/10 pb-4">
+          {/* Right: Detailed Node Telemetry Inspector */}
+          <div className="lg:col-span-6 bg-[#0c1018] border border-white/10 rounded-xl p-6 flex flex-col justify-between space-y-5">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <div>
-                  <span className="text-[10px] font-mono text-amber-400 uppercase tracking-widest block">
-                    ARCHITECTURAL_SPECIFICATION // NODE_TELEMETRY
+                  <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-wider block font-bold">
+                    SUBSYSTEM INSPECTION
                   </span>
-                  <h4 className="text-xl font-bold text-white mt-1">{selectedNode.label}</h4>
-                  <span className="text-xs font-mono text-gray-400">{selectedNode.tech}</span>
+                  <h4 className="text-xl font-bold text-white mt-0.5">
+                    {selectedNode.label}
+                  </h4>
                 </div>
-                <span className="text-[10px] font-mono px-2.5 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300">
-                  {selectedNode.role}
+                <span className="text-xs font-mono px-2.5 py-1 rounded bg-white/5 text-gray-300 border border-white/10">
+                  {selectedNode.tech}
                 </span>
               </div>
 
-              {/* WHY IT EXISTS */}
-              <div className="space-y-1">
-                <span className="text-xs font-mono text-amber-400 font-semibold flex items-center gap-1.5">
-                  <Info className="w-3.5 h-3.5" />
-                  1. WHY DOES THIS COMPONENT EXIST?
-                </span>
-                <p className="text-xs text-gray-300 leading-relaxed pl-5 font-sans">
-                  {selectedNode.whyExists}
-                </p>
-              </div>
+              <div className="space-y-3 text-xs sm:text-sm">
+                <div className="space-y-1">
+                  <span className="font-mono text-[11px] font-bold text-gray-400 tracking-wider flex items-center gap-1.5">
+                    <Info className="w-3.5 h-3.5 text-cyan-400" />
+                    ARCHITECTURAL PURPOSE:
+                  </span>
+                  <p className="text-gray-200 leading-relaxed font-sans pl-5">
+                    {selectedNode.whyExists}
+                  </p>
+                </div>
 
-              {/* WHAT IT SOLVES */}
-              <div className="space-y-1">
-                <span className="text-xs font-mono text-cyan-400 font-semibold flex items-center gap-1.5">
-                  <Zap className="w-3.5 h-3.5" />
-                  2. WHAT BOTTLENECK / DEFECT DOES IT SOLVE?
-                </span>
-                <p className="text-xs text-gray-300 leading-relaxed pl-5 font-sans">
-                  {selectedNode.whatItSolves}
-                </p>
-              </div>
+                <div className="space-y-1">
+                  <span className="font-mono text-[11px] font-bold text-gray-400 tracking-wider flex items-center gap-1.5">
+                    <Zap className="w-3.5 h-3.5 text-amber-400" />
+                    FAILURE MODE / WHAT IT SOLVES:
+                  </span>
+                  <p className="text-gray-200 leading-relaxed font-sans pl-5">
+                    {selectedNode.whatItSolves}
+                  </p>
+                </div>
 
-              {/* SHIV KANT'S USAGE */}
-              <div className="space-y-1 p-3 rounded-lg bg-black/40 border border-white/5">
-                <span className="text-xs font-mono text-emerald-400 font-semibold flex items-center gap-1.5">
-                  <CheckCircle className="w-3.5 h-3.5" />
-                  3. HOW SHIV KANT ENGINEERED IT:
-                </span>
-                <p className="text-xs text-gray-200 leading-relaxed pl-5 font-sans">
-                  {selectedNode.shivUsage}
-                </p>
+                <div className="space-y-1 pt-1 border-t border-white/5">
+                  <span className="font-mono text-[11px] font-bold text-cyan-400 tracking-wider flex items-center gap-1.5">
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                    HOW SHIV KANT IMPLEMENTED IT:
+                  </span>
+                  <p className="text-gray-100 font-medium leading-relaxed font-sans pl-5 bg-white/[0.02] p-3 rounded-lg border border-white/5">
+                    {selectedNode.shivUsage}
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-gray-500">
-              <span>STATUS: PRODUCTION_TESTED</span>
-              <span>VERIFIED METRIC LOGS</span>
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-gray-500">
+              <span>ZERO ASSUMPTIONS // SYSTEM OF RECORD</span>
+              <span className="text-cyan-400 font-bold">100% REPRODUCIBLE</span>
             </div>
           </div>
         </div>

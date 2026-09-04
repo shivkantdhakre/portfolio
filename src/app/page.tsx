@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Lenis from "lenis";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { HeroCoreScene } from "@/components/3d/HeroCoreScene";
 import { HeaderNav } from "@/components/navigation/HeaderNav";
 import { HeroSection } from "@/components/chapters/HeroSection";
@@ -14,43 +16,48 @@ import { ContactSection } from "@/components/chapters/ContactSection";
 import { RecruiterModeModal } from "@/components/recruiter/RecruiterModeModal";
 import { PageLoadIntro } from "@/components/motion/PageLoadIntro";
 
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
 export default function Home() {
   const [recruiterOpen, setRecruiterOpen] = useState(false);
   const [activeChapter, setActiveChapter] = useState<string>("chapter-hero");
   const lenisRef = useRef<Lenis | null>(null);
 
-  // Initialize Lenis smooth scrolling
+  // Synchronize Lenis Smooth Scroll with GSAP ScrollTrigger
   useEffect(() => {
-    // Only run smooth scroll if user does not prefer reduced motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
 
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 1,
+      wheelMultiplier: 1.0,
       touchMultiplier: 1.5,
     });
     lenisRef.current = lenis;
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
+    // Connect Lenis to ScrollTrigger
+    lenis.on("scroll", ScrollTrigger.update);
 
-    const animId = requestAnimationFrame(raf);
+    const tickerCallback = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+    gsap.ticker.add(tickerCallback);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      cancelAnimationFrame(animId);
+      gsap.ticker.remove(tickerCallback);
       lenis.destroy();
       lenisRef.current = null;
     };
   }, []);
 
-  // Pause Lenis smooth scrolling when modal is open to restore native wheel scroll inside modal
+  // Pause smooth scroll when Recruiter Modal is open to restore native wheel scroll
   useEffect(() => {
     if (recruiterOpen) {
       lenisRef.current?.stop();
@@ -59,7 +66,7 @@ export default function Home() {
     }
   }, [recruiterOpen]);
 
-  // Robust Scroll and Focal Detection for Chapter Tracking
+  // Chapter Tracking with ScrollTrigger and Focal Scanning
   useEffect(() => {
     const chapterIds = [
       "chapter-hero",
@@ -77,18 +84,17 @@ export default function Home() {
       const scrollY = window.scrollY || window.pageYOffset;
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
 
-      // When reaching near the bottom of the page, activate Contact (Chapter 06)
+      // When near page bottom, activate Contact
       if (totalScroll > 0 && scrollY >= totalScroll - 120) {
         setActiveChapter("chapter-contact");
         ticking = false;
         return;
       }
 
-      // Primary focal scanline: 35% down from top of viewport (directly under header)
+      // 35% scanline down from top of viewport
       const focalLine = window.innerHeight * 0.35;
       let matchedChapter = chapterIds[0];
 
-      // Scan backwards from contact to hero; the first section whose top has passed the focal line is active
       for (let i = chapterIds.length - 1; i >= 0; i--) {
         const id = chapterIds[i];
         const el = document.getElementById(id);
@@ -111,7 +117,6 @@ export default function Home() {
       }
     };
 
-    // Run immediately on mount
     updateActiveChapter();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -124,15 +129,15 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-[#07080c] text-white selection:bg-amber-500 selection:text-black overflow-x-hidden">
-      {/* Cinematic HUD Calibration Intro Sequence */}
+    <div className="relative min-h-screen bg-[#07090e] text-white selection:bg-amber-500 selection:text-black overflow-x-hidden">
+      {/* Rapid Non-blocking Cinematic Entrance */}
       <PageLoadIntro />
 
-      {/* Blueprint Grid & Speed Lines Ambient Overlay */}
-      <div className="fixed inset-0 blueprint-grid opacity-60 pointer-events-none z-0" />
-      <div className="fixed inset-0 speed-lines opacity-40 pointer-events-none z-0" />
+      {/* Atmospheric Blueprint Grid & Speed Lines */}
+      <div className="fixed inset-0 blueprint-grid opacity-50 pointer-events-none z-0" />
+      <div className="fixed inset-0 speed-lines opacity-30 pointer-events-none z-0" />
 
-      {/* Persistent 3D Interactive WebGL Scene with Chapter Choreography */}
+      {/* Persistent 3D Architectural Monolith WebGL Scene */}
       <HeroCoreScene activeChapter={activeChapter} />
 
       {/* Top Header Navigation */}
@@ -143,7 +148,7 @@ export default function Home() {
       />
 
       {/* Main Narrative Chapters */}
-      <main className="relative z-10 space-y-12">
+      <main className="relative z-10 space-y-16">
         {/* Chapter 01: THE ENGINEER */}
         <HeroSection onOpenRecruiter={() => setRecruiterOpen(true)} />
 
@@ -159,22 +164,22 @@ export default function Home() {
         {/* Chapter 05: BEYOND CODE */}
         <BeyondCodeSection />
 
-        {/* Answer Engine Optimization & Knowledge Base */}
+        {/* Knowledge Base & AEO FAQ */}
         <FaqSection />
 
         {/* Chapter 06: LET'S BUILD */}
         <ContactSection onOpenRecruiter={() => setRecruiterOpen(true)} />
       </main>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-white/10 py-8 px-4 text-center text-xs font-mono text-gray-500 bg-[#07080c]/90">
+      {/* Clean Technical Footer */}
+      <footer className="relative z-10 border-t border-white/10 py-8 px-4 text-center text-xs font-mono text-gray-500 bg-[#07090e]/90">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <span>SHIV KANT DHAKRE © 2026 // FULL-STACK ENGINEER</span>
           <div className="flex items-center gap-4">
-            <span>BUILT WITH NEXT.JS, THREE.JS &amp; TAILWIND CSS</span>
+            <span className="text-gray-400">NEXT.js • THREE.js • GSAP • TAILWIND</span>
             <button
               onClick={() => setRecruiterOpen(true)}
-              className="text-amber-400 hover:underline cursor-pointer"
+              className="text-amber-400 hover:text-amber-300 transition-colors cursor-pointer font-bold focus-ring-amber rounded px-1.5 py-0.5"
             >
               [ RECRUITER MODE ]
             </button>
